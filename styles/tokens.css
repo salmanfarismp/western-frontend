@@ -1,0 +1,26 @@
+/**
+ * Design Tokens Reference — Warm Natural Outdoor Living
+ * Sourced from design/design.md
+ */
+
+:root {
+  /* Surface Foundations */
+  --canvas-linen: #FAF8F5;
+  --surface-cream: #F3EFEA;
+  --surface-card: #FFFFFF;
+  --border-subtle: #E4DDD3;
+
+  /* Botanical & Earth Accents */
+  --moss-deep: #475546;
+  --moss-light: #8D9E8C;
+  --primary-sage: #627361;
+  --espresso-rich: #251B17;
+  --terracotta-soft: #D99377;
+  --terracotta-rich: #C2795B;
+  --sand-tint: #E8DEC8;
+  --neutral-mineral: #76746E;
+
+  /* Ambient Diffuse Shadow */
+  --shadow-ambient: 0 10px 30px -4px rgba(37, 27, 23, 0.05), 0 4px 12px -2px rgba(37, 27, 23, 0.03);
+  --shadow-floating: 0 20px 40px -6px rgba(37, 27, 23, 0.09), 0 8px 16px -4px rgba(37, 27, 23, 0.04);
+}

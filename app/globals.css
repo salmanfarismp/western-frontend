@@ -1,26 +1,249 @@
 @import "tailwindcss";
 
+@theme {
+  /* Surfaces & Canvas */
+  --color-canvas-linen: #FAF8F5;
+  --color-surface-cream: #F3EFEA;
+  --color-surface-card: #FFFFFF;
+  --color-surface: #fdf9f1;
+  --color-surface-dim: #dddad2;
+  --color-surface-bright: #fdf9f1;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f7f3ec;
+  --color-surface-container: #f1ede6;
+  --color-surface-container-high: #ece8e0;
+  --color-surface-container-highest: #e6e2db;
+  --color-surface-variant: #e6e2db;
+  --color-on-surface: #1c1c17;
+  --color-on-surface-variant: #434842;
+  --color-inverse-surface: #31302c;
+  --color-inverse-on-surface: #f4f0e9;
+
+  /* Structural & Outlines */
+  --color-outline: #747872;
+  --color-outline-variant: #c4c8c0;
+  --color-surface-tint: #526351;
+  --color-border-subtle: #E4DDD3;
+
+  /* Brand Palette */
+  --color-primary: #4a5a4a;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #627361;
+  --color-on-primary-container: #e5f8e1;
+  --color-inverse-primary: #b9ccb6;
+
+  --color-secondary: #695b56;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #f2ded8;
+  --color-on-secondary-container: #70615c;
+
+  --color-tertiary: #83462b;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #a05d41;
+  --color-on-tertiary-container: #ffefea;
+
+  /* Earth Tones & Materials */
+  --color-moss-deep: #475546;
+  --color-moss-light: #8D9E8C;
+  --color-espresso-rich: #251B17;
+  --color-terracotta-soft: #D99377;
+  --color-terracotta-rich: #C2795B;
+  --color-sand-tint: #E8DEC8;
+  --color-neutral-mineral: #76746E;
+
+  /* Fixed Palettes */
+  --color-primary-fixed: #d5e8d2;
+  --color-primary-fixed-dim: #b9ccb6;
+  --color-on-primary-fixed: #101f11;
+  --color-on-primary-fixed-variant: #3b4b3b;
+  --color-secondary-fixed: #f2ded8;
+  --color-secondary-fixed-dim: #d5c3bc;
+  --color-on-secondary-fixed: #231915;
+  --color-on-secondary-fixed-variant: #51443f;
+  --color-tertiary-fixed: #ffdbce;
+  --color-tertiary-fixed-dim: #ffb598;
+  --color-on-tertiary-fixed: #370e00;
+  --color-on-tertiary-fixed-variant: #70371e;
+
+  /* Status Colors */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Typography Font Families */
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Ambient Espresso Shadows */
+  --shadow-ambient: 0 10px 30px -4px rgba(37, 27, 23, 0.05), 0 4px 12px -2px rgba(37, 27, 23, 0.03);
+  --shadow-floating: 0 20px 40px -6px rgba(37, 27, 23, 0.09), 0 8px 16px -4px rgba(37, 27, 23, 0.04);
+
+  /* Rounded Borders */
+  --radius-sm: 0.25rem;
+  --radius-DEFAULT: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Spacing Tokens */
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-mobile: 1rem;
+  --spacing-margin: 3rem;
+  --spacing-margin-mobile: 1.25rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
+  --spacing-space-xxl: 4rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #FAF8F5;
+  --foreground: #251B17;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Scale Presets */
+@layer utilities {
+  .font-display-hero {
+    font-family: var(--font-serif);
+    font-size: 56px;
+    line-height: 68px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  @media (max-width: 768px) {
+    .font-display-hero {
+      font-size: 38px;
+      line-height: 46px;
+      letter-spacing: -0.01em;
+    }
+  }
+
+  .font-headline-lg {
+    font-family: var(--font-serif);
+    font-size: 40px;
+    line-height: 50px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  @media (max-width: 768px) {
+    .font-headline-lg {
+      font-size: 30px;
+      line-height: 38px;
+      letter-spacing: -0.01em;
+    }
+  }
+
+  .font-headline-md {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    line-height: 36px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .font-headline-sm {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 30px;
+    font-weight: 500;
+  }
+
+  .font-title-lg {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 600;
+  }
+
+  .font-title-md {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+
+  .font-body-lg {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 400;
+  }
+
+  .font-body-md {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: 400;
+  }
+
+  .font-body-sm {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 400;
+  }
+
+  .font-label-lg {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .font-label-md {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .font-label-caption {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Animated Left-to-Right Underline for Tertiary/Link Buttons */
+  .link-underline {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transform-origin: bottom left;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+  }
 }
