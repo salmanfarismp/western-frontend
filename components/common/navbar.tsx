@@ -11,11 +11,7 @@ interface NavbarProps {
   onSearch?: (query: string) => void;
 }
 
-export function Navbar({
-  cartCount = 3,
-  onCartClick,
-  onSearch,
-}: NavbarProps) {
+export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -58,10 +54,10 @@ export function Navbar({
                 alt="Westernswings Icon"
                 width={36}
                 height={36}
-                className="h-9 w-9 object-contain shrink-0 transition-transform group-hover:scale-105"
+                className="h-9 w-9 object-contain shrink-0 transition-transform"
                 priority
               />
-              <span className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-espresso-rich group-hover:text-primary-container transition-colors">
+              <span className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-espresso-rich  transition-colors">
                 Westernswings
               </span>
             </Link>
@@ -79,7 +75,7 @@ export function Navbar({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search hand-woven porch & garden swings..."
-                className="w-full  pl-10 pr-4 py-2 rounded-2xl border border-border-subtle text-sm text-espresso-rich placeholder:text-neutral-mineral/70 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all shadow-xs"
+                className="w-full  pl-10 pr-4 py-2 rounded-lg border border-border-subtle text-sm text-espresso-rich placeholder:text-neutral-mineral/70 focus:outline-none focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all shadow-xs"
               />
             </div>
           </form>
@@ -87,7 +83,6 @@ export function Navbar({
           {/* User & Cart Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Quick Design System Link for Convenience */}
-          
 
             {/* Cart Trigger */}
             <button
