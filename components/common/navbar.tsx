@@ -111,15 +111,15 @@ export function Navbar({
         </div>
       </div>
 
-      {/* Desktop Subnavigation Menu */}
-      <div className="w-full border-t border-border-subtle/60 hidden md:block bg-surface-bright/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center justify-center space-x-8">
+      {/* Desktop Subnavigation Menu with definite height h-11 */}
+      <div className="w-full h-11 border-t border-border-subtle/60 hidden md:block bg-surface-bright/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <nav className="flex items-center justify-center space-x-8 h-full">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="py-3 text-xs uppercase tracking-[0.06em] font-semibold text-neutral-mineral hover:text-espresso-rich border-b-2 border-transparent hover:border-primary-container transition-all"
+                className="h-full flex items-center text-xs uppercase tracking-[0.06em] font-semibold text-espresso-rich hover:text-primary-container border-b-2 border-transparent hover:border-primary-container transition-all"
               >
                 {link.label}
               </Link>

@@ -103,6 +103,13 @@
 :root {
   --background: #FAF8F5;
   --foreground: #251B17;
+  --header-height: 96px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 156px;
+  }
 }
 
 body {
