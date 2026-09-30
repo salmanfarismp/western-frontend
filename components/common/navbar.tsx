@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, Menu, X, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { Search, ShoppingBag, Menu, X, CircleUserRound } from "lucide-react";
 
 interface NavbarProps {
   cartCount?: number;
@@ -52,9 +53,14 @@ export function Navbar({
             </button>
 
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="h-9 w-9 rounded-full bg-primary-container text-surface-card flex items-center justify-center font-serif text-lg font-bold shadow-sm transition-transform group-hover:scale-105">
-                W
-              </div>
+              <Image
+                src="/icon.png"
+                alt="Westernswings Icon"
+                width={36}
+                height={36}
+                className="h-9 w-9 object-contain shrink-0 transition-transform group-hover:scale-105"
+                priority
+              />
               <span className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-espresso-rich group-hover:text-primary-container transition-colors">
                 Westernswings
               </span>
@@ -73,7 +79,7 @@ export function Navbar({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search hand-woven porch & garden swings..."
-                className="w-full bg-canvas-linen pl-10 pr-4 py-2 rounded-full border border-border-subtle text-sm text-espresso-rich placeholder:text-neutral-mineral/70 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all shadow-xs"
+                className="w-full  pl-10 pr-4 py-2 rounded-2xl border border-border-subtle text-sm text-espresso-rich placeholder:text-neutral-mineral/70 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all shadow-xs"
               />
             </div>
           </form>
@@ -81,13 +87,7 @@ export function Navbar({
           {/* User & Cart Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Quick Design System Link for Convenience */}
-            <Link
-              href="/design-system"
-              className="hidden xl:inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-neutral-mineral hover:text-espresso-rich px-2.5 py-1 rounded-full border border-border-subtle hover:bg-surface-cream transition-colors"
-            >
-              <span>Design Tokens</span>
-              <ArrowRight className="w-3 h-3" />
-            </Link>
+          
 
             {/* Cart Trigger */}
             <button
@@ -104,8 +104,8 @@ export function Navbar({
             </button>
 
             {/* User Profile Avatar */}
-            <div className="w-8 h-8 rounded-full bg-sand-tint border border-border-subtle flex items-center justify-center font-medium text-xs text-espresso-rich">
-              WS
+            <div className="w-8 h-8 rounded-full  flex items-center justify-center font-medium text-xs text-espresso-rich">
+              <CircleUserRound className="w-5 h-5 text-espresso-rich" />
             </div>
           </div>
         </div>

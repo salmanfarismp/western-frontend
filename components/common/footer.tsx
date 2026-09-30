@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone } from "lucide-react";
 
 export function Footer() {
@@ -13,9 +14,13 @@ export function Footer() {
           {/* Brand Info */}
           <div className="max-w-xl space-y-3">
             <Link href="/" className="inline-flex items-center gap-2.5 group">
-              <div className="h-8 w-8 rounded-full bg-primary-container text-surface-card flex items-center justify-center font-serif text-base font-bold shadow-xs">
-                W
-              </div>
+              <Image
+                src="/icon.png"
+                alt="Westernswings Icon"
+                width={32}
+                height={32}
+                className="h-8 w-8 object-contain shrink-0 transition-transform group-hover:scale-105"
+              />
               <span className="font-serif text-2xl font-semibold tracking-tight text-espresso-rich">
                 Westernswings
               </span>
