@@ -150,7 +150,7 @@ export const HERO_FEATURED = {
   badge: "Featured Architecture",
   rating: "4.96 / 5.0",
   image:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCoUzEwIbQrrQbZNVx4ujkDX_eASU2tNz2DOW-iTF9yq94-MhyHvTYj268AGzkCl-HZpZlkWxKE4rs4POQ20n4boCZfryIsat540-RZOUcb10YOcMYVtXLj9R8ZRaiF6l5v7n6gUTjQVstulp1piCDMAUEs3nnJ00aTQSD1RAng5umEI1GyeZk-lBzufq6mnBXadU1PLRYYsct0LFSM8zlZgqp2FREQyqxF7-UY-uyp6VZrQzeF4_5zFw",
+    "/assets/dummy/hero.jpg",
   alt: "Sun-drenched patio veranda with luxury single egg swing suspended from architectural beam",
 };
 

@@ -83,9 +83,9 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column: Hero Visual Showcase */}
+          {/* Right Column: Hero Visual Showcase (Strict 1:1 Aspect Ratio) */}
           <div className="lg:col-span-6 relative flex items-center justify-center">
-            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:h-[calc(100svh-var(--header-height)-48px)] lg:max-h-[580px] xl:max-h-[640px] rounded-xl overflow-hidden shadow-ambient bg-surface-container border border-border-subtle/80">
+            <div className="relative w-full aspect-square max-w-[calc(100svh-var(--header-height)-48px)] xl:max-w-[560px] rounded-xl overflow-hidden shadow-ambient bg-surface-container border border-border-subtle/80">
               <Image
                 src={HERO_FEATURED.image}
                 alt={HERO_FEATURED.alt}
