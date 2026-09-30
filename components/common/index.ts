@@ -1,4 +1,4 @@
-/**
- * Layout and global structural components (e.g. Navbar, Footer, CartDrawer)
- */
-export {};
+export { AnnouncementBar } from "./announcement-bar";
+export { Navbar } from "./navbar";
+export { Footer } from "./footer";
+export { WhatsAppButton } from "./whatsapp-button";
