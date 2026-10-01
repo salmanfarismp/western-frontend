@@ -10,7 +10,7 @@ export const PRODUCTS_LIST_FILTERS: CategoryFilterItem[] = [
   { label: "All Swings", value: "all", count: 28 },
   { label: "Single Cocoon", value: "single", count: 12 },
   { label: "Double Loveseat", value: "double", count: 8 },
-  { label: "Daybeds", value: "daybed", count: 5 },
+  { label: "Swing bed", value: "swingbed", count: 5 },
   { label: "Stands & Accessories", value: "stands", count: 3 },
 ];
 
@@ -66,7 +66,7 @@ export const PRODUCTS_LIST_ITEMS: Product[] = [
   {
     id: "montauk-teak-daybed",
     name: "The Montauk Teak Sanctuary Daybed",
-    category: "daybed",
+    category: "swingbed",
     subtitle: "78-inch full daybed crafted from mortise-and-tenon Indonesian teak.",
     description:
       "Expansive 78-inch solid grade-A Indonesian teak porch daybed with mortise-and-tenon joinery, matte black marine hardware, and tufted waterproof mattress.",

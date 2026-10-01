@@ -18,7 +18,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     <div className="group bg-surface-card rounded-lg sm:rounded-xl overflow-hidden shadow-ambient hover:shadow-floating transition-all duration-300 flex flex-col border border-border-subtle/80">
       {/* Product Image Tile */}
       <Link
-        href={`/product/${product.id}`}
+        href={`/product/${product.slug || product.id}`}
         className="relative aspect-square bg-canvas-linen overflow-hidden block"
       >
         <Image
@@ -61,7 +61,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             </span>
           </div>
 
-          <Link href={`/product/${product.id}`}>
+          <Link href={`/product/${product.slug || product.id}`}>
             <h3 className="font-serif text-sm sm:text-base font-semibold text-espresso-rich group-hover:text-primary-container transition-colors line-clamp-1">
               {product.name}
             </h3>

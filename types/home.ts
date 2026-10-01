@@ -1,4 +1,4 @@
-export type ProductCategory = "all" | "single" | "double" | "daybed" | "stands";
+export type ProductCategory = "all" | "single" | "double" | "swingbed" | "stands";
 
 export interface ProductTone {
   name: string;
@@ -7,6 +7,7 @@ export interface ProductTone {
 
 export interface Product {
   id: string;
+  slug?: string;
   name: string;
   category: ProductCategory;
   subtitle: string;

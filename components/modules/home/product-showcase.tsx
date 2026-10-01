@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Star, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ export function ProductShowcase({
     { label: "All Swings", value: "all" },
     { label: "Single Cocoon", value: "single" },
     { label: "Double Loveseat", value: "double" },
-    { label: "Daybeds", value: "daybed" },
+    { label: "Swing Bed", value: "swingbed" },
   ];
 
   const filteredProducts =
@@ -67,13 +68,17 @@ export function ProductShowcase({
         {/* Product Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
           {filteredProducts.map((product) => {
+            const productSlug = product.slug || product.id;
             return (
               <div
                 key={product.id}
                 className="group bg-surface-card rounded-lg sm:rounded-xl overflow-hidden shadow-ambient hover:shadow-floating transition-all duration-300 flex flex-col border border-border-subtle/80"
               >
                 {/* Product Image Tile */}
-                <div className="relative aspect-square bg-canvas-linen overflow-hidden">
+                <Link
+                  href={`/product/${productSlug}`}
+                  className="relative aspect-square bg-canvas-linen overflow-hidden block"
+                >
                   <Image
                     src={product.image}
                     alt={product.alt}
@@ -94,7 +99,7 @@ export function ProductShowcase({
                       </Badge>
                     </div>
                   )}
-                </div>
+                </Link>
 
                 {/* Product Details */}
                 <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between space-y-2.5 sm:space-y-3 bg-surface-card">
@@ -114,9 +119,11 @@ export function ProductShowcase({
                       </span>
                     </div>
 
-                    <h3 className="font-serif text-sm sm:text-base font-semibold text-espresso-rich group-hover:text-primary-container transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
+                    <Link href={`/product/${productSlug}`}>
+                      <h3 className="font-serif text-sm sm:text-base font-semibold text-espresso-rich group-hover:text-primary-container transition-colors line-clamp-1">
+                        {product.name}
+                      </h3>
+                    </Link>
                     <p className="font-sans text-[11px] sm:text-xs text-neutral-mineral line-clamp-1 sm:line-clamp-2 leading-relaxed">
                       {product.subtitle}
                     </p>

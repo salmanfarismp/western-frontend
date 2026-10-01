@@ -36,7 +36,7 @@ export const HOME_CATEGORIES: CategorySilhouette[] = [
     countLabel: "6 Designs Available",
     image: "/assets/cat-daybed.webp",
     alt: "Grand architectural three-seater teak daybed porch swing",
-    href: "/collections?category=daybed",
+    href: "/collections?category=swingbed",
   },
   {
     id: "stands-accessories",
@@ -53,6 +53,7 @@ export const HOME_CATEGORIES: CategorySilhouette[] = [
 export const HOME_PRODUCTS: Product[] = [
   {
     id: "sonora-teak-pod",
+    slug: "sonora-teak-pod",
     name: "The Sonora Teak Pod Swing",
     category: "single",
     subtitle: "Single nest chair crafted with open-weave resilient PE rattan.",
@@ -84,6 +85,7 @@ export const HOME_PRODUCTS: Product[] = [
   },
   {
     id: "sonorha-teak-pod",
+    slug: "sonora-teak-pod",
     name: "The Sonora Teak Pod Swing",
     category: "single",
     subtitle: "Single nest chair crafted with open-weave resilient PE rattan.",
@@ -115,6 +117,7 @@ export const HOME_PRODUCTS: Product[] = [
   },
   {
     id: "carmel-double-loveseat",
+    slug: "carmel-double-loveseat",
     name: "The Carmel Double Loveseat",
     category: "double",
     subtitle:
@@ -147,8 +150,9 @@ export const HOME_PRODUCTS: Product[] = [
   },
   {
     id: "montauk-teak-daybed",
+    slug: "montauk-teak-daybed",
     name: "The Montauk Teak Sanctuary Daybed",
-    category: "daybed",
+    category: "swingbed",
     subtitle:
       "78-inch full daybed crafted from mortise-and-tenon Indonesian teak.",
     description:

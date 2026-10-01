@@ -30,7 +30,7 @@ export function Navbar({
     { label: "All Swings", href: "/collections?category=all" },
     { label: "Single Swings", href: "/collections?category=single" },
     { label: "Double Swings", href: "/collections?category=double" },
-    { label: "Three Seater Swings", href: "/collections?category=daybed" },
+    { label: "Three Seater Swings", href: "/collections?category=swingbed" },
     { label: "Accessories", href: "/collections?category=stands" },
     { label: "Inspiration & Lookbook", href: "/#lookbook" },
     { label: "About Us", href: "/#footer" },

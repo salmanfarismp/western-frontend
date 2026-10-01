@@ -10,7 +10,7 @@ export function CategoryBar({ activeCategory }: CategoryBarProps) {
     { label: "All Swings", href: "/collections?category=all", category: "all" },
     { label: "Single Swings", href: "/collections?category=single", category: "single" },
     { label: "Double Swings", href: "/collections?category=double", category: "double" },
-    { label: "Three Seater Swings", href: "/collections?category=daybed", category: "daybed" },
+    { label: "Three Seater Swings", href: "/collections?category=swingbed", category: "swingbed" },
     { label: "Accessories", href: "/collections?category=stands", category: "stands" },
     { label: "Inspiration & Lookbook", href: "/#lookbook" },
     { label: "About Us", href: "/#footer" },
