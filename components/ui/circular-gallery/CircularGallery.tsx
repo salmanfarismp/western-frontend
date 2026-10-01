@@ -19,6 +19,7 @@ export interface CircularGalleryProps {
   scrollSpeed?: number;
   scrollEase?: number;
   className?: string;
+  enableWaviness?: boolean;
 }
 
 function debounce<T extends (...args: unknown[]) => void>(func: T, wait: number) {
@@ -253,6 +254,7 @@ class Media {
   textColor?: string;
   borderRadius: number;
   font?: string;
+  enableWaviness: boolean;
   program!: Program;
   plane!: Mesh;
   title?: Title;
@@ -279,7 +281,8 @@ class Media {
     bend,
     textColor,
     borderRadius = 0,
-    font
+    font,
+    enableWaviness = true
   }: {
     geometry: Plane;
     gl: OGLRenderingContext;
@@ -295,6 +298,7 @@ class Media {
     textColor?: string;
     borderRadius?: number;
     font?: string;
+    enableWaviness?: boolean;
   }) {
     this.geometry = geometry;
     this.gl = gl;
@@ -310,6 +314,7 @@ class Media {
     this.textColor = textColor;
     this.borderRadius = borderRadius;
     this.font = font;
+    this.enableWaviness = enableWaviness;
     this.createShader();
     this.createMesh();
     if (this.text) {
@@ -333,11 +338,14 @@ class Media {
         uniform mat4 projectionMatrix;
         uniform float uTime;
         uniform float uSpeed;
+        uniform float uWaviness;
         varying vec2 vUv;
         void main() {
           vUv = uv;
           vec3 p = position;
-          p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5) * (0.1 + uSpeed * 0.5);
+          if (uWaviness > 0.0) {
+            p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5) * (0.1 + uSpeed * 0.5) * uWaviness;
+          }
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
       `,
@@ -380,7 +388,8 @@ class Media {
         uImageSizes: { value: [0, 0] },
         uSpeed: { value: 0 },
         uTime: { value: 100 * Math.random() },
-        uBorderRadius: { value: this.borderRadius }
+        uBorderRadius: { value: this.borderRadius },
+        uWaviness: { value: this.enableWaviness ? 1.0 : 0.0 }
       },
       transparent: true
     });
@@ -511,7 +520,8 @@ class App {
       borderRadius = 0,
       font = 'bold 30px Figtree',
       scrollSpeed = 2,
-      scrollEase = 0.05
+      scrollEase = 0.05,
+      enableWaviness = true
     }: {
       items?: Array<{ image: string; text?: string }>;
       bend?: number;
@@ -520,6 +530,7 @@ class App {
       font?: string;
       scrollSpeed?: number;
       scrollEase?: number;
+      enableWaviness?: boolean;
     } = {}
   ) {
     if (typeof document !== 'undefined') {
@@ -534,7 +545,7 @@ class App {
     this.createScene();
     this.onResize();
     this.createGeometry();
-    this.createMedias(items, bend, textColor, borderRadius, font);
+    this.createMedias(items, bend, textColor, borderRadius, font, enableWaviness);
     this.update();
     this.addEventListeners();
   }
@@ -572,7 +583,8 @@ class App {
     bend = 1,
     textColor = '#ffffff',
     borderRadius = 0,
-    font = 'bold 30px Figtree'
+    font = 'bold 30px Figtree',
+    enableWaviness = true
   ) {
     const defaultItems = [
       { image: `https://picsum.photos/seed/1/800/600?grayscale` },
@@ -605,7 +617,8 @@ class App {
         bend,
         textColor,
         borderRadius,
-        font
+        font,
+        enableWaviness
       });
     });
   }
@@ -745,7 +758,8 @@ export default function CircularGallery({
   fontUrl,
   scrollSpeed = 2,
   scrollEase = 0.05,
-  className = ''
+  className = '',
+  enableWaviness = true
 }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -763,7 +777,8 @@ export default function CircularGallery({
         borderRadius,
         font: resolvedFont,
         scrollSpeed,
-        scrollEase
+        scrollEase,
+        enableWaviness
       });
     });
 
@@ -771,7 +786,7 @@ export default function CircularGallery({
       isMounted = false;
       if (app) app.destroy();
     };
-  }, [items, bend, textColor, borderRadius, font, fontUrl, scrollSpeed, scrollEase]);
+  }, [items, bend, textColor, borderRadius, font, fontUrl, scrollSpeed, scrollEase, enableWaviness]);
 
   return (
     <div

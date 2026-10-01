@@ -1,5 +1,4 @@
 import React from "react";
-import { Camera } from "lucide-react";
 import { LOOKBOOK_POSTS } from "@/lib/data/home-data";
 import { CircularGallery } from "@/components/ui/circular-gallery";
 
@@ -32,6 +31,7 @@ export function LookbookGallery() {
             bend={0.5}
             borderRadius={0.06}
             scrollEase={0.04}
+            enableWaviness={false}
           />
         </div>
 
