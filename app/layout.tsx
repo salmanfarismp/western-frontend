@@ -3,7 +3,7 @@ import { playfair, plusJakarta } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Western Living | Curated Architectural Outdoor Sanctuaries",
+  title: "Westernswings",
   description:
     "Slow outdoor living, curated patio sanctuaries, and artisanal craftsmanship in solid teak, all-weather wicker, and sunbaked natural textiles.",
   keywords: [
