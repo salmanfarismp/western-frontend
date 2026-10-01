@@ -11,40 +11,40 @@ export const HOME_CATEGORIES: CategorySilhouette[] = [
   {
     id: "single-egg",
     name: "Single Egg Swings",
-    description: "Cozy reading nooks designed for solitary reflection and afternoon escapes.",
+    description:
+      "Cozy reading nooks designed for solitary reflection and afternoon escapes.",
     countLabel: "12 Designs Available",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBaL6-WdMS8a6aC4HStrdttbhG5UylW_NXGaxPG6zRA_VsNa-6mHDkm0CUuKB4O1pnJdk8XpHu67SzYf302ZnfJp2F5mS3WGQWlHAn1i02fkgHItJakFVBmxoagjx6Fimgv2M2wvqu6KHU1wm9bUhdWj2Y_iohn2L0kLLPjmHqnxOD4m1e0fAtQW1xPrmd_pexFWHI69nQgRP8zsxe1KAZ2DTU_6VcsMGpUUcG4P2lfqiCvJ2NgGLReeg",
+    image: "/assets/cat-single.webp",
     alt: "Single bohemian modern egg swing suspended in lush veranda",
     href: "#products",
   },
   {
     id: "double-loveseat",
     name: "Double Loveseat Swings",
-    description: "Generously proportioned two-person swings to watch twilight deepen together.",
+    description:
+      "Generously proportioned two-person swings to watch twilight deepen together.",
     countLabel: "8 Designs Available",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCadFqKbycPsr4Ryn9JufbpNSKeLif2jg11B45jg3MO_U8OV-Wp5SKjAdzr9_G2TRB2BiCbHrJsw_sjOxfcVhg2jn8HtZoqItLTIjwKWgtaCT9xUu_ciL-iUaPoqak_i1dGmNgArqSWgDSLvkYDC9k9mcMfJIH7mu7uhjam-lY4Oe7E-hFIAL91cARNNPnjcu7nM4PihQqcUw6nmjtbVO7uml2EA6vDfEpiv4skGOJFqA6rvC-4-lUBKQ",
+    image: "/assets/cat-double.webp",
     alt: "Double wide luxury outdoor swing chair overlooking sunset",
     href: "#products",
   },
   {
     id: "three-seater",
     name: "Three-Seater Swings",
-    description: "Sprawling family daybeds and statement pieces for grand backyard porches.",
+    description:
+      "Sprawling family daybeds and statement pieces for grand backyard porches.",
     countLabel: "6 Designs Available",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBnNQOqjEhZdCQcrEGyy7Nf5KgrZeIxwMSjHCUx0Mz31-KhDlADOwJn_Qzp8R_kpT9zER0VTLJVwnbkTb5Qk2LxRLRzccmyl0zAfSaqSbyW4EcauuKvCXxkRxsbAsxlxSlY4PJIjGDNhYFe53Y3EjU1HM_Bm3a-OLkl-SANR77UXYQEDAxpBs_WnRNLld1ptLp9q37utRN38FZ4RBKabuzuLuRhrhRy63byzPIY9FEztEkOeRNNHcrDtg",
+    image: "/assets/cat-daybed.webp",
     alt: "Grand architectural three-seater teak daybed porch swing",
     href: "#products",
   },
   {
     id: "stands-accessories",
     name: "Stands & Accessories",
-    description: "Freestanding heavy-duty arched stands, silencer suspension springs, and all-weather covers.",
+    description:
+      "Freestanding heavy-duty arched stands, silencer suspension springs, and all-weather covers.",
     countLabel: "24 Essentials",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAduwsBZ-26pwsXl-A_Q8Ft3D7ywGf03Ibffq98QzYdOcw9wTgGnOLNkbtnumOZ2C3yT-MR0k169eYEXmvnhOmJvYYs6xk83LPRKNy-ykDKFmyrJV_Brdtq5A5xPSKLAxuRkt4P5CCbBcyekKEfa1cnRCDcaNDf8Q7qCQvxTvSg0BV1fncVB-AVtRKLFdev9wdNlW3l_fXhbATF6D20S1PlWkh-kzyG_2Hu6Z26QqgbYouVhsQODHgmUg",
+    image: "/assets/cat-access.webp",
     alt: "Marine-grade powder-coated matte espresso metal stand and suspension hardware",
     href: "#products",
   },
@@ -74,7 +74,8 @@ export const HOME_PRODUCTS: Product[] = [
       { name: "Forest Sage", hex: "#4A5A4A" },
       { name: "Espresso Wicker", hex: "#251B17" },
     ],
-    specs: "Handwoven PE rattan shell with 360-degree all-weather resilience. Accommodates up to 350 lbs comfortably.",
+    specs:
+      "Handwoven PE rattan shell with 360-degree all-weather resilience. Accommodates up to 350 lbs comfortably.",
     hardware: [
       "1x Heavy-Duty Dampened Spring",
       "10ft Adjustable Nautical Hanging Rope",
@@ -85,7 +86,8 @@ export const HOME_PRODUCTS: Product[] = [
     id: "carmel-double-loveseat",
     name: "The Carmel Double Loveseat",
     category: "double",
-    subtitle: "Spacious 2-person cocoon with extra-deep Olefin quick-dry cushioning.",
+    subtitle:
+      "Spacious 2-person cocoon with extra-deep Olefin quick-dry cushioning.",
     description:
       "Spacious two-person cocoon handcrafted with intricately woven driftwood grey all-weather rattan, featuring oversized ivory cushions and dual suspension hooks.",
     price: 48999,
@@ -104,7 +106,8 @@ export const HOME_PRODUCTS: Product[] = [
       { name: "Weathered Cedar", hex: "#695B56" },
       { name: "Spanish Moss", hex: "#475546" },
     ],
-    specs: "Handwoven resin core with 360-degree all-weather resilience. Accommodates two adults up to 550 lbs comfortably.",
+    specs:
+      "Handwoven resin core with 360-degree all-weather resilience. Accommodates two adults up to 550 lbs comfortably.",
     hardware: [
       "2x Heavy-Duty Dampened Springs",
       "10ft Adjustable Nautical Hanging Ropes",
@@ -115,7 +118,8 @@ export const HOME_PRODUCTS: Product[] = [
     id: "montauk-teak-daybed",
     name: "The Montauk Teak Sanctuary Daybed",
     category: "daybed",
-    subtitle: "78-inch full daybed crafted from mortise-and-tenon Indonesian teak.",
+    subtitle:
+      "78-inch full daybed crafted from mortise-and-tenon Indonesian teak.",
     description:
       "Expansive 78-inch solid grade-A Indonesian teak porch daybed with mortise-and-tenon joinery, matte black marine hardware, and tufted waterproof mattress.",
     price: 74999,
@@ -134,7 +138,8 @@ export const HOME_PRODUCTS: Product[] = [
       { name: "Bleached Teak", hex: "#E5DFD3" },
       { name: "Charcoal Teak", hex: "#3B342F" },
     ],
-    specs: "FSC certified sustainable Indonesian teak with natural oil protection. Accommodates 3 adults up to 800 lbs.",
+    specs:
+      "FSC certified sustainable Indonesian teak with natural oil protection. Accommodates 3 adults up to 800 lbs.",
     hardware: [
       "4x Stainless Steel Marine Rigging Shackles",
       "Heavy-Duty Galvanized Chains with Protective Sleeve",
@@ -149,8 +154,7 @@ export const HERO_FEATURED = {
   price: "₹48,999",
   badge: "Featured Architecture",
   rating: "4.96 / 5.0",
-  image:
-    "/assets/dummy/hero.jpg",
+  image: "/assets/dummy/hero.jpg",
   alt: "Sun-drenched patio veranda with luxury single egg swing suspended from architectural beam",
 };
 

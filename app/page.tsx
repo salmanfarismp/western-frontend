@@ -13,6 +13,7 @@ import {
 } from "@/components/modules/home";
 import type { Product } from "@/types/home";
 import { Check } from "lucide-react";
+import CategoryBar from "@/components/common/category-bar";
 
 export default function HomePage() {
   const [cartCount, setCartCount] = useState(3);
@@ -42,6 +43,7 @@ export default function HomePage() {
 
       {/* Main Content Area */}
       <main className="flex-1 w-full">
+        <CategoryBar/>
         {/* Editorial Hero Section */}
         <HeroSection />
 

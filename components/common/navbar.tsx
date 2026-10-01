@@ -30,7 +30,7 @@ export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
   ];
 
   return (
-    <header className="sticky top-0 left-0 w-full z-40 bg-surface-card/95 backdrop-blur-md border-b border-border-subtle shadow-sm transition-all">
+    <header className="sticky top-0 left-0 w-full z-40 bg-surface-card/95 backdrop-blur-md border-b border-border-subtle/60  transition-all">
       {/* Main Top Header Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 sm:h-20 flex items-center justify-between gap-4">
@@ -107,21 +107,7 @@ export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
       </div>
 
       {/* Desktop Subnavigation Menu with definite height h-11 */}
-      <div className="w-full h-11 border-t border-border-subtle/60 hidden md:block bg-surface-bright/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <nav className="flex items-center justify-center space-x-8 h-full">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="h-full flex items-center text-xs uppercase tracking-[0.06em] font-semibold text-espresso-rich hover:text-primary-container border-b-2 border-transparent hover:border-primary-container transition-all"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
+    
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
