@@ -47,7 +47,7 @@ export function ProductBreadcrumbs({
         {/* Ready to Ship Badge */}
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-cream text-moss-deep text-[11px] font-sans uppercase tracking-wider font-semibold shadow-2xs border border-border-subtle/60">
-            <span className="w-2 h-2 rounded-full bg-primary-container animate-pulse" />
+            {/* <span className="w-2 h-2 rounded-full bg-primary-container" /> */}
             {inventoryStatus}
           </span>
         </div>

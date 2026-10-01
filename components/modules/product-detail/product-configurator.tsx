@@ -103,7 +103,7 @@ export function ProductConfigurator({
           </div>
 
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/10 text-primary-container text-[11px] font-sans uppercase tracking-wider font-semibold">
-            <span className="w-2 h-2 rounded-full bg-primary-container animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-primary-container " />
             In Stock
           </span>
         </div>
@@ -133,17 +133,10 @@ export function ProductConfigurator({
       </div>
 
       {/* Option: Tone Selection */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <span className="text-xs sm:text-sm font-medium text-espresso-rich">
-            Tone Selection
-          </span>
-          <span className="text-[11px] text-neutral-mineral">
-            {selectedTone.materialLabel}
-          </span>
-        </div>
+      <div className="space-y-2">
+       
 
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="flex items-center gap-3">
           {tones.map((tone) => {
             const isSelected = tone.id === selectedToneId;
             return (
@@ -151,20 +144,15 @@ export function ProductConfigurator({
                 key={tone.id}
                 type="button"
                 onClick={() => setSelectedToneId(tone.id)}
-                className={`flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                title={tone.name}
+                aria-label={tone.name}
+                style={{ backgroundColor: tone.colorHex }}
+                className={`w-8 h-8 rounded-full border border-black/10 shadow-2xs transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-surface-card border-primary-container ring-2 ring-primary-container ring-offset-2 ring-offset-canvas-linen"
-                    : "bg-surface-card border-border-subtle hover:border-moss-deep/50"
+                    ? "ring-2 ring-primary-container ring-offset-2 ring-offset-surface-card scale-105"
+                    : "hover:scale-105 opacity-90 hover:opacity-100"
                 }`}
-              >
-                <span
-                  style={{ backgroundColor: tone.colorHex }}
-                  className="w-5 h-5 rounded-full shadow-inner shrink-0 border border-black/10"
-                />
-                <span className="text-xs sm:text-sm text-espresso-rich font-medium truncate">
-                  {tone.name}
-                </span>
-              </button>
+              />
             );
           })}
         </div>

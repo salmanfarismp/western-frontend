@@ -31,7 +31,7 @@ export function SimilarProducts({
               MORE OPTIONS
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-espresso-rich font-normal">
-              Similar Products
+             Discover More Like This
             </h2>
           </div>
         </div>
