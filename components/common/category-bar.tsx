@@ -1,17 +1,32 @@
 import Link from "next/link";
 import type { ProductCategory } from "@/types/home";
+import type { ProductCategoryRow } from "@/types/database";
 
 interface CategoryBarProps {
   activeCategory?: ProductCategory;
+  categories?: ProductCategoryRow[];
 }
 
-export function CategoryBar({ activeCategory }: CategoryBarProps) {
+export function CategoryBar({ activeCategory, categories }: CategoryBarProps) {
+  const dynamicLinks = categories && categories.length > 0
+    ? [
+        { label: "All Swings", href: "/collections", category: "all" },
+        ...categories.map((c) => ({
+          label: c.name || "Category",
+          href: `/collections?category=${c.slug}`,
+          category: c.slug || String(c.id),
+        })),
+      ]
+    : [
+        { label: "All Swings", href: "/collections?category=all", category: "all" },
+        { label: "Single Swings", href: "/collections?category=single-swing-chair", category: "single-swing-chair" },
+        { label: "Double Swings", href: "/collections?category=double-swing-chair", category: "double-swing-chair" },
+        { label: "Three Seater Swings", href: "/collections?category=swing-bed", category: "swing-bed" },
+        { label: "Accessories", href: "/collections?category=swing-chair-accessories", category: "swing-chair-accessories" },
+      ];
+
   const navLinks: { label: string; href: string; category?: ProductCategory }[] = [
-    { label: "All Swings", href: "/collections?category=all", category: "all" },
-    { label: "Single Swings", href: "/collections?category=single", category: "single" },
-    { label: "Double Swings", href: "/collections?category=double", category: "double" },
-    { label: "Three Seater Swings", href: "/collections?category=swingbed", category: "swingbed" },
-    { label: "Accessories", href: "/collections?category=stands", category: "stands" },
+    ...dynamicLinks,
     { label: "Inspiration & Lookbook", href: "/#lookbook" },
     { label: "About Us", href: "/#footer" },
   ];

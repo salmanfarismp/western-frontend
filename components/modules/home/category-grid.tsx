@@ -2,9 +2,13 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { HOME_CATEGORIES } from "@/lib/data/home-data";
+import type { CategorySilhouette } from "@/types/home";
 
-export function CategoryGrid() {
+interface CategoryGridProps {
+  categories: CategorySilhouette[];
+}
+
+export function CategoryGrid({ categories }: CategoryGridProps) {
   return (
     <section className="w-full py-12 sm:py-16 bg-canvas-linen border-t border-border-subtle/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,7 +30,7 @@ export function CategoryGrid() {
 
         {/* 4-Card Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {HOME_CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <Link
               key={category.id}
               href={category.href}

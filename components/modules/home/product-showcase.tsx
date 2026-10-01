@@ -6,29 +6,45 @@ import Link from "next/link";
 import { Star, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { HOME_PRODUCTS } from "@/lib/data/home-data";
 import type { Product, ProductCategory } from "@/types/home";
+import type { ProductCategoryRow } from "@/types/database";
 
 interface ProductShowcaseProps {
+  products: Product[];
+  categories?: ProductCategoryRow[];
   onAddToCart: (product: Product) => void;
 }
 
 export function ProductShowcase({
+  products,
+  categories,
   onAddToCart,
 }: ProductShowcaseProps) {
   const [activeFilter, setActiveFilter] = useState<ProductCategory>("all");
 
-  const filterTabs: { label: string; value: ProductCategory }[] = [
-    { label: "All Swings", value: "all" },
-    { label: "Single Cocoon", value: "single" },
-    { label: "Double Loveseat", value: "double" },
-    { label: "Swing Bed", value: "swingbed" },
-  ];
+  const filterTabs: { label: string; value: ProductCategory }[] = categories && categories.length > 0
+    ? [
+        { label: "All Swings", value: "all" },
+        ...categories.map((c) => ({
+          label: c.nick_name || c.name || "Category",
+          value: (c.slug || String(c.id)) as ProductCategory,
+        })),
+      ]
+    : [
+        { label: "All Swings", value: "all" },
+        { label: "Single Cocoon", value: "single-swing-chair" },
+        { label: "Double Loveseat", value: "double-swing-chair" },
+        { label: "Swing Bed", value: "swing-bed" },
+      ];
 
   const filteredProducts =
     activeFilter === "all"
-      ? HOME_PRODUCTS
-      : HOME_PRODUCTS.filter((p) => p.category === activeFilter);
+      ? products
+      : products.filter(
+          (p) =>
+            p.category === activeFilter ||
+            (p.category && activeFilter && (p.category.includes(activeFilter) || activeFilter.includes(p.category)))
+        );
 
   return (
     <section id="products" className="w-full bg-surface-cream py-10 sm:py-14">

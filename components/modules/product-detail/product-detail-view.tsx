@@ -19,9 +19,13 @@ import { Check } from "lucide-react";
 
 interface ProductDetailViewProps {
   product: ProductDetailData;
+  similarProducts?: Product[];
 }
 
-export function ProductDetailView({ product }: ProductDetailViewProps) {
+export function ProductDetailView({
+  product,
+  similarProducts,
+}: ProductDetailViewProps) {
   const [cartCount, setCartCount] = useState(3);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -46,7 +50,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     showToast(`Added ${similarProduct.name} to your sanctuary cart`);
   };
 
-  const handleBuyNow = (quantity: number, selectedTone: string, totalPrice: number) => {
+  const handleBuyNow = (quantity: number, selectedTone: string) => {
     setCartCount((prev) => prev + quantity);
     showToast(
       `Proceeding to checkout with ${quantity} × ${product.name} (${selectedTone})`
@@ -120,6 +124,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
         {/* Similar Products Section */}
         <SimilarProducts
           currentProductId={product.id}
+          similarProducts={similarProducts}
           onAddToCart={handleSimilarAddToCart}
         />
       </main>

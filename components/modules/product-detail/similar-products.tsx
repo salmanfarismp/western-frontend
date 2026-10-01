@@ -2,22 +2,26 @@
 
 import React from "react";
 import { ProductCard } from "@/components/modules/products-list";
-import { PRODUCTS_LIST_ITEMS } from "@/lib/data/products-list-data";
 import type { Product } from "@/types/home";
 
 interface SimilarProductsProps {
   currentProductId?: string;
+  similarProducts?: Product[];
   onAddToCart: (product: Product) => void;
 }
 
 export function SimilarProducts({
   currentProductId,
+  similarProducts = [],
   onAddToCart,
 }: SimilarProductsProps) {
-  // Take up to 3 or 4 products, excluding the current one if matched
-  const similarItems = PRODUCTS_LIST_ITEMS.filter(
-    (item) => item.id !== currentProductId
+  const similarItems = similarProducts.filter(
+    (item) => item.id !== currentProductId && item.slug !== currentProductId
   ).slice(0, 3);
+
+  if (similarItems.length === 0) {
+    return null;
+  }
 
   return (
     <section

@@ -3,17 +3,20 @@
 import React from "react";
 import { ShieldCheck } from "lucide-react";
 import type { ProductCategory } from "@/types/home";
+import type { ProductCategoryRow } from "@/types/database";
 import { PRODUCTS_LIST_FILTERS } from "@/lib/data/products-list-data";
 
 interface ProductsHeroProps {
   activeCategory: ProductCategory;
   onSelectCategory: (category: ProductCategory) => void;
+  categories?: ProductCategoryRow[];
   totalModels?: number;
 }
 
 export function ProductsHero({
   activeCategory,
   onSelectCategory,
+  categories,
   totalModels = 28,
 }: ProductsHeroProps) {
   return (
@@ -67,8 +70,19 @@ export function ProductsHero({
 
         {/* Category Filter Pills */}
         <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-2 mt-5 sm:mt-7 scrollbar-none whitespace-nowrap">
-          {PRODUCTS_LIST_FILTERS.map((filter) => {
-            const isActive = activeCategory === filter.value;
+          {(categories && categories.length > 0
+            ? [
+                { label: "All Swings", value: "all" },
+                ...categories.map((c) => ({
+                  label: c.nick_name || c.name || "Category",
+                  value: (c.slug || String(c.id)) as ProductCategory,
+                })),
+              ]
+            : PRODUCTS_LIST_FILTERS
+          ).map((filter) => {
+            const isActive =
+              activeCategory === filter.value ||
+              (activeCategory && filter.value !== "all" && (activeCategory.includes(filter.value) || filter.value.includes(activeCategory)));
             return (
               <button
                 key={filter.value}
@@ -79,7 +93,7 @@ export function ProductsHero({
                     : "bg-surface-card hover:bg-surface-container text-espresso-rich font-medium border border-border-subtle/70"
                 }`}
               >
-                {filter.label} ({filter.count})
+                {filter.label}
               </button>
             );
           })}

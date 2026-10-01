@@ -1,4 +1,10 @@
-export type ProductCategory = "all" | "single" | "double" | "swingbed" | "stands";
+export type ProductCategory =
+  | "all"
+  | "single"
+  | "double"
+  | "swingbed"
+  | "stands"
+  | (string & {});
 
 export interface ProductTone {
   name: string;

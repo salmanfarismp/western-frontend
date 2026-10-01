@@ -43,6 +43,7 @@ export interface ProductDetailData {
   name: string;
   category: string;
   categorySlug: string;
+  categoryId?: number;
   breadcrumbCategory: string;
   badges: Array<{
     text: string;

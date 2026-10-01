@@ -11,28 +11,61 @@ import {
 } from "@/components/common";
 import { LookbookGallery } from "@/components/modules/home";
 import { ProductsHero, ProductsGrid } from "@/components/modules/products-list";
-import { PRODUCTS_LIST_ITEMS } from "@/lib/data/products-list-data";
+import { getCategories } from "@/lib/api/categories";
+import { getProducts } from "@/lib/api/products";
 import type { Product, ProductCategory } from "@/types/home";
+import type { ProductCategoryRow } from "@/types/database";
 import { Check } from "lucide-react";
 
 function CollectionsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const categoryParam =
+  const activeCategory =
     (searchParams.get("category") as ProductCategory) ?? "all";
 
+  const [categories, setCategories] = useState<ProductCategoryRow[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loadedCategory, setLoadedCategory] = useState<string | null>(null);
   const [cartCount, setCartCount] = useState(3);
-  const [activeCategory, setActiveCategory] =
-    useState<ProductCategory>(categoryParam);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Synchronize state when the URL parameter changes (e.g., clicking CategoryBar or browser navigation)
+  const loading = loadedCategory !== activeCategory;
+
+  // Load categories initially
   useEffect(() => {
-    setActiveCategory(categoryParam);
-  }, [categoryParam]);
+    let mounted = true;
+    getCategories().then((cats) => {
+      if (mounted) setCategories(cats);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Fetch products when activeCategory changes
+  useEffect(() => {
+    let mounted = true;
+
+    getProducts({
+      categorySlug: activeCategory === "all" ? undefined : activeCategory,
+    })
+      .then((data) => {
+        if (mounted) {
+          setProducts(data);
+          setLoadedCategory(activeCategory);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load products:", err);
+        if (mounted) setLoadedCategory(activeCategory);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [activeCategory]);
 
   const handleSelectCategory = (category: ProductCategory) => {
-    setActiveCategory(category);
     const newUrl =
       category === "all" ? "/collections" : `/collections?category=${category}`;
     router.push(newUrl, { scroll: false });
@@ -45,11 +78,6 @@ function CollectionsContent() {
       setToastMessage(null);
     }, 3000);
   };
-
-  const filteredProducts =
-    activeCategory === "all"
-      ? PRODUCTS_LIST_ITEMS
-      : PRODUCTS_LIST_ITEMS.filter((p) => p.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
@@ -65,19 +93,33 @@ function CollectionsContent() {
         }
       />
 
+      {/* Secondary Category Navigation */}
+      <CategoryBar activeCategory={activeCategory} categories={categories} />
+
       {/* Main Content Area */}
       <main className="flex-1 w-full">
         {/* Curated Collection Hero & Category Filter Pills */}
         <ProductsHero
           activeCategory={activeCategory}
           onSelectCategory={handleSelectCategory}
+          categories={categories}
+          totalModels={products.length}
         />
 
-        {/* Product Grid identical to Home Page Cards */}
-        <ProductsGrid
-          products={filteredProducts}
-          onAddToCart={handleAddToCart}
-        />
+        {/* Product Grid or Loading State */}
+        {loading ? (
+          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-center justify-center">
+            <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin mb-4" />
+            <p className="text-sm font-sans text-neutral-mineral">
+              Gathering handcrafted swings...
+            </p>
+          </div>
+        ) : (
+          <ProductsGrid
+            products={products}
+            onAddToCart={handleAddToCart}
+          />
+        )}
 
         {/* Community & Instagram Lookbook Gallery */}
         <LookbookGallery />
