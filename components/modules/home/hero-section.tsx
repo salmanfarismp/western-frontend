@@ -16,7 +16,7 @@ export function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center w-full">
           {/* Left Column: Editorial Headline & Narrative */}
           <div className="lg:col-span-6 flex flex-col space-y-4 sm:space-y-5 z-10">
-            <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl xl:text-[44px] font-semibold text-espresso-rich leading-[1.16] tracking-tight">
+            <h1 className="font-serif text-3xl sm:text-3xl lg:text-4xl xl:text-[44px] font-semibold text-espresso-rich leading-[1.16] tracking-tight">
               Crafted for Quiet Moments &amp; Gentle Breezes
             </h1>
 

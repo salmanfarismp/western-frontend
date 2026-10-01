@@ -83,6 +83,37 @@ export const HOME_PRODUCTS: Product[] = [
     ],
   },
   {
+    id: "sonorha-teak-pod",
+    name: "The Sonora Teak Pod Swing",
+    category: "single",
+    subtitle: "Single nest chair crafted with open-weave resilient PE rattan.",
+    description:
+      "Single nest chair hand-strung with high-density UV polyethylene wicker over a powder-coated aluminum frame, lined with deep Olefin weatherproof cushions.",
+    price: 28999,
+    originalPrice: 34500,
+    rating: 5.0,
+    reviewsCount: 184,
+    badge: {
+      text: "Best Seller",
+      variant: "outline",
+    },
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuChEM7qXnNuwRHniN6XT3MZw9vZxWo0E2a27Cpd9GRToXwQL1yEqP46pMEp1KB_b79yl6HOcpJBaxRtNyoZQsQDSukDKoVVA_uu58IsNg6Bq7rFKMixvF4Y3smDEHROzVxdGHEDl36C85aPB-_8FD_d7ezu3SLiy4fyrNRQz1GUI5CGafv3LP7c477qmVnQsTnohqSQ1tEcZcv19Jtwtq1BkxxmDRfzikjlTmztRwd-9wwJ2_H9P7ms3Q",
+    alt: "Artisanal bohemian hand-strung rattan single pod swing chair with thick ivory cushion",
+    tones: [
+      { name: "Sand Linen", hex: "#D4C3A3" },
+      { name: "Forest Sage", hex: "#4A5A4A" },
+      { name: "Espresso Wicker", hex: "#251B17" },
+    ],
+    specs:
+      "Handwoven PE rattan shell with 360-degree all-weather resilience. Accommodates up to 350 lbs comfortably.",
+    hardware: [
+      "1x Heavy-Duty Dampened Spring",
+      "10ft Adjustable Nautical Hanging Rope",
+      "Olefin Quick-Dry Tufted Cushion",
+    ],
+  },
+  {
     id: "carmel-double-loveseat",
     name: "The Carmel Double Loveseat",
     category: "double",
@@ -256,6 +287,7 @@ export const CUSTOMER_REVIEWS: CustomerReview[] = [
 export const LOOKBOOK_POSTS: InstagramPost[] = [
   {
     id: "post-1",
+    title: "Sunlit Morning Porch",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCFyW3lhUH_YYM0AQoximBWBtDfjVEtuI6yHDR2rgs8uvYgSt1mUj4cKp8U2768XrUfO-kc2HD-e9KN4gc1N3PPGiUH3zv8X-kgTZyzEw5aV2ECr061MgJClamyNkOdeRZwcYnGHXhE-zqKi95DACWvKFPz8MFEAwUIkeFc6g3vNgT8KrH2dihtU_cEUc6rALeik6Q_HP_U3fCXgTd_AshduvCkcmvehpC2zVAFyoxH6zzrv2kYf8Au5Q",
     alt: "Sunlit morning coffee mug held on the edge of a teak porch swing",
@@ -263,6 +295,7 @@ export const LOOKBOOK_POSTS: InstagramPost[] = [
   },
   {
     id: "post-2",
+    title: "Palm Springs Haven",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuAzGiew06JXKmArTyH_r-NcsTNqUCXbBwRIqABR3IJ13X8O6ViTWy1pcGacGX2NoR6k59mA0UpKKBo7JaPRSrdZ322psbhHYWp6HY2cYYcjH1C_9YA7NmYYQEUX_6vfzVuvG4S8yvAdH3Cddb0tE8_TlvFZDanJWmCBwldTjmPa82A3hHU9z_6_wM1TWw3jSe4nDuHLIaCS5fh_c-jJhl6sAvoV8_B6JgXYSEezabcKrjnJHhoD0yI1Qw",
     alt: "Golden hour poolside lounge in Palm Springs with double egg swing",
@@ -270,6 +303,7 @@ export const LOOKBOOK_POSTS: InstagramPost[] = [
   },
   {
     id: "post-3",
+    title: "Artisanal Cocoon",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuDjICvkAPLgAINkNv6HlxiXAvw6_zaiXUD7XquN-I8yt-9fek453zR8w9EMgX2SI3CKV2r-jkqKF10y4UcwL1NVXLrZOiWpFdWnXhOw3ZpEoDBubs-z58J2itXKUtP82f4zBlwT5HnGpl9DWGX0ZCWvok6NCyj8SacEchA6jtMuYDmd8JAntqkRh86aoEP8-F0vgAicaq4VampB6rCUV_VPz1xrUnoEU9gzfgazYxQUEbsLA5oJ7A92dQ",
     alt: "Woman reading book curled inside an egg cocoon swing",
@@ -277,6 +311,7 @@ export const LOOKBOOK_POSTS: InstagramPost[] = [
   },
   {
     id: "post-4",
+    title: "Floating Patio Daybed",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuC3BJRRiDf7gaSFwHuK8mYixYDIbKqdyFoHVHYhf4WvnIr_Pyxm_XClma16DxfS3o3q7mbiPItbljyL1VwULneFX0eqmRacZRyWq0L2wCVpzDkbmYBSrtB0gm5ViDwNAOF1MArqwVT7vOLYenlriUVffdyv5AIlaHybTholy4X8vWfFShb4_MX0OANRc0sbpJR0menaJaA00iqxea-8exWv7ZTm_NEKLhKp3lRazp9wuqTWczfUgG5nIQ",
     alt: "Overhead view of outdoor patio table with daybed swing softly floating",

@@ -135,13 +135,6 @@ export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/design-system"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2.5 text-sm font-medium text-primary-container hover:bg-surface-cream rounded-md transition-colors"
-            >
-              Inspect Design Tokens →
-            </Link>
           </div>
         </div>
       )}
