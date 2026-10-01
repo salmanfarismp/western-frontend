@@ -9,9 +9,15 @@ interface NavbarProps {
   cartCount?: number;
   onCartClick?: () => void;
   onSearch?: (query: string) => void;
+  showSearch?: boolean;
 }
 
-export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
+export function Navbar({
+  cartCount = 3,
+  onCartClick,
+  onSearch,
+  showSearch,
+}: NavbarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -50,7 +56,7 @@ export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
 
             <Link href="/" className="flex items-center gap-2.5 group">
               <Image
-                src="/icon.png"
+                src="/icon.svg"
                 alt="Westernswings Icon"
                 width={36}
                 height={36}
@@ -62,23 +68,24 @@ export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
               </span>
             </Link>
           </div>
-
+          {showSearch && (
+            <form
+              onSubmit={handleSearchSubmit}
+              className="hidden lg:flex flex-1 max-w-md mx-6"
+            >
+              <div className="relative w-full">
+                <Search className="w-4 h-4 text-neutral-mineral absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search hand-woven porch & garden swings..."
+                  className="w-full  pl-10 pr-4 py-2 rounded-lg border border-border-subtle text-sm text-espresso-rich placeholder:text-neutral-mineral/70 focus:outline-none focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all shadow-xs"
+                />
+              </div>
+            </form>
+          )}
           {/* Desktop Search Bar */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className="hidden lg:flex flex-1 max-w-md mx-6"
-          >
-            <div className="relative w-full">
-              <Search className="w-4 h-4 text-neutral-mineral absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search hand-woven porch & garden swings..."
-                className="w-full  pl-10 pr-4 py-2 rounded-lg border border-border-subtle text-sm text-espresso-rich placeholder:text-neutral-mineral/70 focus:outline-none focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all shadow-xs"
-              />
-            </div>
-          </form>
 
           {/* User & Cart Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
@@ -107,7 +114,6 @@ export function Navbar({ cartCount = 3, onCartClick, onSearch }: NavbarProps) {
       </div>
 
       {/* Desktop Subnavigation Menu with definite height h-11 */}
-    
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (

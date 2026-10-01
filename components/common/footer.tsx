@@ -15,7 +15,7 @@ export function Footer() {
           <div className="max-w-xl space-y-3">
             <Link href="/" className="inline-flex items-center gap-2.5 group">
               <Image
-                src="/icon.png"
+                src="/icon.svg"
                 alt="Westernswings Icon"
                 width={32}
                 height={32}
@@ -26,9 +26,9 @@ export function Footer() {
               </span>
             </Link>
             <p className="font-sans text-sm text-neutral-mineral leading-relaxed">
-              Slow patio sanctuaries handcrafted for discerning outdoor living. Built with
-              sustainable Grade-A teak, weather-tested all-season resin wicker, and marine-grade
-              suspension hardware.
+              Fine crafted outdoor nests engineered with marine-grade hardware,
+              hand-woven UV resin fibers, and kiln-dried FSC teak for years of
+              unhurried mornings.
             </p>
           </div>
 
@@ -52,9 +52,7 @@ export function Footer() {
 
         {/* Bottom Disclosures & Payment Methods */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-mineral text-center md:text-left">
-          <p>
-            © 2025 Westernswings Sanctuary Living LLC. All rights reserved. Handcrafted outdoor luxury.
-          </p>
+          <p>© 2026 Westernswings. All rights reserved.</p>
 
           <div className="flex flex-wrap items-center gap-2">
             <span className="uppercase tracking-wider font-semibold text-[10px] text-neutral-mineral/80 mr-1">

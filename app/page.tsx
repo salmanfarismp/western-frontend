@@ -40,6 +40,7 @@ export default function HomePage() {
       {/* Main Navigation Header */}
       <Navbar
         cartCount={cartCount}
+        showSearch
         onCartClick={() =>
           setToastMessage(`Your cart contains ${cartCount} handcrafted items`)
         }
