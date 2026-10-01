@@ -18,7 +18,7 @@ import {
 } from "@/components/modules/home";
 import type { Product } from "@/types/home";
 import { Check } from "lucide-react";
-import CategoryBar from "@/components/common/category-bar";
+import { CategoryBar } from "@/components/common/category-bar";
 
 export default function HomePage() {
   const [cartCount, setCartCount] = useState(3);

@@ -181,6 +181,7 @@ export const HOME_PRODUCTS: Product[] = [
 
 export const HERO_FEATURED = {
   title: "The Solstice Cocoon Egg",
+  slug: "the-solstice-cocoon-egg",
   subtitle: "Natural Rattan & Marine-Grade Alloy",
   price: "₹48,999",
   badge: "Featured Architecture",

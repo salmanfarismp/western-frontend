@@ -7,7 +7,7 @@ export function Footer() {
   const paymentMethods = ["Visa", "Mastercard", "Amex", "Apple Pay"];
 
   return (
-    <footer className="w-full bg-surface-cream border-t border-border-subtle pt-12 pb-16">
+    <footer id="footer" className="w-full bg-surface-cream border-t border-border-subtle pt-12 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Main Footer Row */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 pb-10 border-b border-border-subtle/80">

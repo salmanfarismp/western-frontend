@@ -36,7 +36,7 @@ export function HeroSection() {
                 asChild
                 className="w-full sm:w-auto"
               >
-                <Link href="#products">
+                <Link href="/collections">
                   <span>Explore The Collection</span>
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
@@ -114,7 +114,7 @@ export function HeroSection() {
                 </div>
 
                 <Link
-                  href="#products"
+                  href={`/product/${HERO_FEATURED.slug}`}
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary-container text-surface-card flex items-center justify-center hover:bg-moss-deep transition-all shadow-md shrink-0 cursor-pointer"
                   aria-label="View The Solstice Cocoon Egg"
                 >
