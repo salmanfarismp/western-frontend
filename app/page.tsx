@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { AnnouncementBar, Navbar, Footer, WhatsAppButton } from "@/components/common";
+import {
+  AnnouncementBar,
+  Navbar,
+  Footer,
+  WhatsAppButton,
+} from "@/components/common";
 import {
   HeroSection,
   CategoryGrid,
@@ -17,7 +22,6 @@ import CategoryBar from "@/components/common/category-bar";
 
 export default function HomePage() {
   const [cartCount, setCartCount] = useState(3);
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleAddToCart = (product: Product) => {
@@ -43,7 +47,7 @@ export default function HomePage() {
 
       {/* Main Content Area */}
       <main className="flex-1 w-full">
-        <CategoryBar/>
+        <CategoryBar />
         {/* Editorial Hero Section */}
         <HeroSection />
 
@@ -51,10 +55,7 @@ export default function HomePage() {
         <CategoryGrid />
 
         {/* Signature Masterpieces / Featured Products with Filters */}
-        <ProductShowcase
-          onQuickView={(product) => setQuickViewProduct(product)}
-          onAddToCart={handleAddToCart}
-        />
+        <ProductShowcase onAddToCart={handleAddToCart} />
 
         {/* Brand Integrity & Materials Engineering Story */}
         <CraftStory />
@@ -71,14 +72,6 @@ export default function HomePage() {
 
       {/* Floating Concierge Action */}
       <WhatsAppButton />
-
-      {/* Interactive Quick View Modal */}
-      <QuickViewModal
-        product={quickViewProduct}
-        isOpen={Boolean(quickViewProduct)}
-        onClose={() => setQuickViewProduct(null)}
-        onAddToCart={handleAddToCart}
-      />
 
       {/* Tactile Notification Toast */}
       {toastMessage && (
