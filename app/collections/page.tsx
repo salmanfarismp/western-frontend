@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   AnnouncementBar,
   Navbar,
   Footer,
   WhatsAppButton,
+  CategoryBar,
 } from "@/components/common";
 import { LookbookGallery } from "@/components/modules/home";
 import { ProductsHero, ProductsGrid } from "@/components/modules/products-list";
@@ -13,14 +15,32 @@ import { PRODUCTS_LIST_ITEMS } from "@/lib/data/products-list-data";
 import type { Product, ProductCategory } from "@/types/home";
 import { Check } from "lucide-react";
 
-export default function ProductsListPage() {
+function CollectionsContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const categoryParam =
+    (searchParams.get("category") as ProductCategory) ?? "all";
+
   const [cartCount, setCartCount] = useState(3);
-  const [activeCategory, setActiveCategory] = useState<ProductCategory>("all");
+  const [activeCategory, setActiveCategory] =
+    useState<ProductCategory>(categoryParam);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Synchronize state when the URL parameter changes (e.g., clicking CategoryBar or browser navigation)
+  useEffect(() => {
+    setActiveCategory(categoryParam);
+  }, [categoryParam]);
+
+  const handleSelectCategory = (category: ProductCategory) => {
+    setActiveCategory(category);
+    const newUrl =
+      category === "all" ? "/collections" : `/collections?category=${category}`;
+    router.push(newUrl, { scroll: false });
+  };
 
   const handleAddToCart = (product: Product) => {
     setCartCount((prev) => prev + 1);
-    setToastMessage(`Added ${product.name} to your sanctuary cart`);
+    setToastMessage(`Added ${product.name} to your cart`);
     setTimeout(() => {
       setToastMessage(null);
     }, 3000);
@@ -50,7 +70,7 @@ export default function ProductsListPage() {
         {/* Curated Collection Hero & Category Filter Pills */}
         <ProductsHero
           activeCategory={activeCategory}
-          onSelectCategory={setActiveCategory}
+          onSelectCategory={handleSelectCategory}
         />
 
         {/* Product Grid identical to Home Page Cards */}
@@ -83,5 +103,21 @@ export default function ProductsListPage() {
         </aside>
       )}
     </div>
+  );
+}
+
+export default function ProductsListPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col items-center justify-center">
+          <div className="animate-pulse text-sm text-neutral-mineral font-sans">
+            Loading collections...
+          </div>
+        </div>
+      }
+    >
+      <CollectionsContent />
+    </Suspense>
   );
 }

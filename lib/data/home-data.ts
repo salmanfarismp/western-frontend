@@ -16,7 +16,7 @@ export const HOME_CATEGORIES: CategorySilhouette[] = [
     countLabel: "12 Designs Available",
     image: "/assets/cat-single.webp",
     alt: "Single bohemian modern egg swing suspended in lush veranda",
-    href: "#products",
+    href: "/collections?category=single",
   },
   {
     id: "double-loveseat",
@@ -26,7 +26,7 @@ export const HOME_CATEGORIES: CategorySilhouette[] = [
     countLabel: "8 Designs Available",
     image: "/assets/cat-double.webp",
     alt: "Double wide luxury outdoor swing chair overlooking sunset",
-    href: "#products",
+    href: "/collections?category=double",
   },
   {
     id: "three-seater",
@@ -36,7 +36,7 @@ export const HOME_CATEGORIES: CategorySilhouette[] = [
     countLabel: "6 Designs Available",
     image: "/assets/cat-daybed.webp",
     alt: "Grand architectural three-seater teak daybed porch swing",
-    href: "#products",
+    href: "/collections?category=daybed",
   },
   {
     id: "stands-accessories",
@@ -46,7 +46,7 @@ export const HOME_CATEGORIES: CategorySilhouette[] = [
     countLabel: "24 Essentials",
     image: "/assets/cat-access.webp",
     alt: "Marine-grade powder-coated matte espresso metal stand and suspension hardware",
-    href: "#products",
+    href: "/collections?category=stands",
   },
 ];
 

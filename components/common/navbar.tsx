@@ -27,12 +27,13 @@ export function Navbar({
   };
 
   const navLinks = [
-    { label: "Single Swings", href: "#products" },
-    { label: "Double Swings", href: "#products" },
-    { label: "Three Seater Swings", href: "#products" },
-    { label: "Accessories", href: "#products" },
-    { label: "Inspiration & Lookbook", href: "#lookbook" },
-    { label: "About Us", href: "#story" },
+    { label: "All Swings", href: "/collections?category=all" },
+    { label: "Single Swings", href: "/collections?category=single" },
+    { label: "Double Swings", href: "/collections?category=double" },
+    { label: "Three Seater Swings", href: "/collections?category=daybed" },
+    { label: "Accessories", href: "/collections?category=stands" },
+    { label: "Inspiration & Lookbook", href: "/#lookbook" },
+    { label: "About Us", href: "/#footer" },
   ];
 
   return (

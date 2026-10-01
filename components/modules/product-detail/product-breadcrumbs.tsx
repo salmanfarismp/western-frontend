@@ -33,7 +33,7 @@ export function ProductBreadcrumbs({
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-neutral-mineral shrink-0" />
           <Link
-            href="/collections"
+            href={`/collections?category=${categorySlug}`}
             className="hover:text-primary-container transition-colors"
           >
             {category}
