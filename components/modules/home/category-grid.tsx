@@ -10,7 +10,10 @@ interface CategoryGridProps {
 
 export function CategoryGrid({ categories }: CategoryGridProps) {
   return (
-    <section className="w-full py-12 sm:py-16 bg-canvas-linen border-t border-border-subtle/50">
+    <section
+      aria-labelledby="silhouettes-heading"
+      className="w-full py-12 sm:py-16 bg-canvas-linen border-t border-border-subtle/50"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-4">
@@ -18,7 +21,10 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
             <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-moss-deep block mb-1.5 font-sans">
               Tailored Suspensions
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-espresso-rich tracking-tight">
+            <h2
+              id="silhouettes-heading"
+              className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-espresso-rich tracking-tight"
+            >
               Architectural Sanctuary Silhouettes
             </h2>
           </div>

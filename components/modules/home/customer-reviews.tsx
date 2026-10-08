@@ -21,7 +21,10 @@ export function CustomerReviews() {
   };
 
   return (
-    <section className="w-full bg-canvas-linen py-12 sm:py-16">
+    <section
+      aria-labelledby="reviews-heading"
+      className="w-full bg-canvas-linen py-12 sm:py-16"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header & Controls */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-4">
@@ -29,7 +32,10 @@ export function CustomerReviews() {
             <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-moss-deep block mb-1.5 font-sans">
               In The Wild
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-espresso-rich tracking-tight">
+            <h2
+              id="reviews-heading"
+              className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-espresso-rich tracking-tight"
+            >
               Real Homes. Gentle Breezes.
             </h2>
           </div>
@@ -56,7 +62,7 @@ export function CustomerReviews() {
         {/* 3 Review Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {CUSTOMER_REVIEWS.map((review, idx) => (
-            <div
+            <article
               key={review.id}
               className={`bg-surface-card rounded-xl overflow-hidden shadow-ambient flex flex-col border border-border-subtle/80 transition-all duration-300 ${
                 currentIndex === idx ? "ring-2 ring-primary-container/20" : ""
@@ -108,7 +114,7 @@ export function CustomerReviews() {
                   )}
                 </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

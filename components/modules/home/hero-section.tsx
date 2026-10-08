@@ -11,12 +11,18 @@ export function HeroSection() {
   )}`;
 
   return (
-    <section className="relative w-full overflow-hidden bg-canvas-linen flex flex-col justify-center min-h-[calc(100svh-var(--header-height))] lg:h-[calc(100svh-var(--header-height))] py-6 lg:py-0">
+    <section
+      aria-labelledby="hero-heading"
+      className="relative w-full overflow-hidden bg-canvas-linen flex flex-col justify-center min-h-[calc(100svh-var(--header-height))] lg:h-[calc(100svh-var(--header-height))] py-6 lg:py-0"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center w-full">
           {/* Left Column: Editorial Headline & Narrative */}
           <div className="lg:col-span-6 flex flex-col space-y-4 sm:space-y-5 z-10">
-            <h1 className="font-serif text-3xl sm:text-3xl lg:text-4xl xl:text-[44px] font-semibold text-espresso-rich leading-[1.16] tracking-tight">
+            <h1
+              id="hero-heading"
+              className="font-serif text-3xl sm:text-3xl lg:text-4xl xl:text-[44px] font-semibold text-espresso-rich leading-[1.16] tracking-tight"
+            >
               Crafted for Quiet Moments &amp; Gentle Breezes
             </h1>
 

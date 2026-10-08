@@ -10,12 +10,12 @@ import type { Product } from "@/types/home";
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (product: Product) => void;
+  onAddToCart?: (product: Product) => void;
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   return (
-    <div className="group bg-surface-card rounded-lg sm:rounded-xl overflow-hidden shadow-ambient hover:shadow-floating transition-all duration-300 flex flex-col border border-border-subtle/80">
+    <article className="group bg-surface-card rounded-lg sm:rounded-xl overflow-hidden shadow-ambient hover:shadow-floating transition-all duration-300 flex flex-col border border-border-subtle/80">
       {/* Product Image Tile */}
       <Link
         href={`/product/${product.slug || product.id}`}
@@ -107,7 +107,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => onAddToCart(product)}
+              onClick={() => onAddToCart?.(product)}
               className="flex items-center gap-1 sm:gap-1.5 text-xs px-2 sm:px-3 h-7 sm:h-8 cursor-pointer"
             >
               <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -117,6 +117,6 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

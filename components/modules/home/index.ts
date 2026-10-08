@@ -5,4 +5,5 @@ export { CraftStory } from "./craft-story";
 export { CustomerReviews } from "./customer-reviews";
 export { LookbookGallery } from "./lookbook-gallery";
 export { QuickViewModal } from "./quick-view-modal";
+export { FaqSection } from "./faq-section";
 export { HomeView } from "./home-view";

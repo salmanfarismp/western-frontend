@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, CheckCircle2, Lock, ShoppingBag, Zap, ArrowRight, Minus, Plus } from "lucide-react";
+import { Star, CheckCircle2, Lock, ShoppingBag, Zap, ArrowRight, Minus, Plus, Check } from "lucide-react";
 import type { ToneOption } from "@/lib/data/product-detail-data";
 
 interface ProductConfiguratorProps {
@@ -15,7 +15,7 @@ interface ProductConfiguratorProps {
   tones: ToneOption[];
   hangingKitIncluded: boolean;
   hangingKitDescription: string;
-  onAddToCart: (quantity: number, selectedTone: string, totalPrice: number) => void;
+  onAddToCart?: (quantity: number, selectedTone: string, totalPrice: number) => void;
   onBuyNow?: (quantity: number, selectedTone: string, totalPrice: number) => void;
 }
 
@@ -36,6 +36,7 @@ export function ProductConfigurator({
   const [selectedToneId, setSelectedToneId] = useState<string>(tones[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
+  const [localToast, setLocalToast] = useState<string | null>(null);
 
   const selectedTone = tones.find((t) => t.id === selectedToneId) || tones[0];
   const orderTotal = price * quantity;
@@ -54,7 +55,12 @@ export function ProductConfigurator({
 
   const handleAdd = () => {
     setIsAdded(true);
-    onAddToCart(quantity, selectedTone.name, orderTotal);
+    if (onAddToCart) {
+      onAddToCart(quantity, selectedTone.name, orderTotal);
+    } else {
+      setLocalToast(`Added ${quantity} × ${name} (${selectedTone.name}) to your cart`);
+      setTimeout(() => setLocalToast(null), 3500);
+    }
     setTimeout(() => {
       setIsAdded(false);
     }, 2000);
@@ -265,6 +271,20 @@ export function ProductConfigurator({
           )}
         </div>
       </div>
+
+      {/* Tactile Notification Toast */}
+      {localToast && (
+        <aside
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-espresso-rich text-canvas-linen px-5 py-3 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-sans font-medium border border-sand-tint/20 animate-fadeIn max-w-[90vw] sm:max-w-md text-center"
+        >
+          <div className="w-5 h-5 rounded-full bg-primary-container text-surface-card flex items-center justify-center shrink-0">
+            <Check className="w-3 h-3" />
+          </div>
+          <span className="truncate">{localToast}</span>
+        </aside>
+      )}
     </div>
   );
 }

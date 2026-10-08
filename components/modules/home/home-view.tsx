@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import {
   AnnouncementBar,
   Navbar,
@@ -14,11 +12,11 @@ import {
   ProductShowcase,
   CraftStory,
   CustomerReviews,
+  FaqSection,
   LookbookGallery,
 } from "@/components/modules/home";
 import type { Product, CategorySilhouette } from "@/types/home";
 import type { ProductCategoryRow } from "@/types/database";
-import { Check } from "lucide-react";
 
 interface HomeViewProps {
   products: Product[];
@@ -31,77 +29,49 @@ export function HomeView({
   categories,
   categorySilhouettes,
 }: HomeViewProps) {
-  const [cartCount, setCartCount] = useState(3);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const handleAddToCart = (product: Product) => {
-    setCartCount((prev) => prev + 1);
-    setToastMessage(`Added ${product.name} to your sanctuary cart`);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
-  };
-
   return (
     <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
       {/* Top Announcements */}
       <AnnouncementBar />
 
-      {/* Main Navigation Header */}
-      <Navbar
-        cartCount={cartCount}
-        showSearch
-        onCartClick={() =>
-          setToastMessage(`Your cart contains ${cartCount} handcrafted items`)
-        }
-      />
+      {/* Main Navigation Header (Client Island) */}
+      <Navbar cartCount={3} showSearch />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full">
+        {/* Category Sub-navigation */}
         <CategoryBar categories={categories} />
 
-        {/* Editorial Hero Section */}
+        {/* Editorial Hero Section (SSR with Priority LCP Image) */}
         <HeroSection />
 
         {/* Shop By Silhouette / Categories */}
         <CategoryGrid categories={categorySilhouettes} />
 
-        {/* Signature Masterpieces / Featured Products with Filters */}
+        {/* Signature Masterpieces / Featured Products with Interactive Filters (Client Island) */}
         <ProductShowcase
           products={products}
           categories={categories}
-          onAddToCart={handleAddToCart}
         />
 
-        {/* Brand Integrity & Materials Engineering Story */}
+        {/* Brand Integrity & Materials Engineering Story (SSR with Semantic Specification List) */}
         <CraftStory />
 
-        {/* Customer Verified Veranda Reviews */}
+        {/* Customer Verified Veranda Reviews (Client Island Carousel) */}
         <CustomerReviews />
 
-        {/* Community & Instagram Lookbook Gallery */}
+        {/* Buyer Guide & Specifications FAQ (SSR Semantic Q&A for AEO & Voice Search) */}
+        <FaqSection />
+
+        {/* Community & Instagram Lookbook 3D Gallery (Client Island) */}
         <LookbookGallery />
       </main>
 
-      {/* Footer */}
+      {/* Footer with Business NAP & Contact Signals */}
       <Footer />
 
       {/* Floating Concierge Action */}
       <WhatsAppButton />
-
-      {/* Tactile Notification Toast */}
-      {toastMessage && (
-        <aside
-          role="status"
-          aria-live="polite"
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-espresso-rich text-canvas-linen px-5 py-3 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-sans font-medium border border-sand-tint/20 animate-fadeIn"
-        >
-          <div className="w-5 h-5 rounded-full bg-primary-container text-surface-card flex items-center justify-center shrink-0">
-            <Check className="w-3 h-3" />
-          </div>
-          <span>{toastMessage}</span>
-        </aside>
-      )}
     </div>
   );
 }

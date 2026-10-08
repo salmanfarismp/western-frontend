@@ -22,19 +22,52 @@ export async function getCategorySilhouettes(): Promise<CategorySilhouette[]> {
   return categories.map(mapCategoryRowToSilhouette);
 }
 
+const CATEGORY_SLUG_ALIASES: Record<string, string> = {
+  single: "single-swing-chair",
+  double: "double-swing-chair",
+  swingbed: "swing-bed",
+  daybed: "swing-bed",
+  stands: "swing-chair-accessories",
+  accessories: "swing-chair-accessories",
+};
+
 export async function getCategoryBySlug(
   slug: string,
 ): Promise<ProductCategoryRow | null> {
+  if (!slug || slug === "all") return null;
+
+  const normalizedSlug = CATEGORY_SLUG_ALIASES[slug.toLowerCase()] || slug;
+
+  // 1. Try exact slug match
   const { data, error } = await supabase
     .from("ProductCategory")
     .select("*")
-    .eq("slug", slug)
+    .eq("slug", normalizedSlug)
     .maybeSingle();
 
-  if (error) {
-    console.error(`Failed to fetch category with slug ${slug}:`, error);
-    return null;
+  if (!error && data) {
+    return data;
   }
 
-  return data;
+  // 2. Fallback: If slug is numeric, match by ID
+  if (/^\d+$/.test(slug)) {
+    const { data: byId } = await supabase
+      .from("ProductCategory")
+      .select("*")
+      .eq("id", parseInt(slug, 10))
+      .maybeSingle();
+
+    if (byId) return byId;
+  }
+
+  // 3. Fallback: Prefix / substring match across existing categories
+  const allCategories = await getCategories();
+  const matched = allCategories.find((cat) => {
+    if (!cat.slug) return false;
+    const catSlug = cat.slug.toLowerCase();
+    const query = slug.toLowerCase();
+    return catSlug.includes(query) || query.includes(catSlug);
+  });
+
+  return matched || null;
 }

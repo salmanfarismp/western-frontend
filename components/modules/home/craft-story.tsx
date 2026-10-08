@@ -17,14 +17,21 @@ export function CraftStory() {
   };
 
   return (
-    <section id="story" className="w-full bg-surface-container py-12 sm:py-16 border-y border-border-subtle/60">
+    <section
+      id="story"
+      aria-labelledby="craft-story-heading"
+      className="w-full bg-surface-container py-12 sm:py-16 border-y border-border-subtle/60"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mx-auto text-center mb-12">
           <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-moss-deep block mb-1.5 font-sans">
             Architectural Integrity
           </span>
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-espresso-rich tracking-tight">
+          <h2
+            id="craft-story-heading"
+            className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-espresso-rich tracking-tight"
+          >
             Engineered to Weather Every Season
           </h2>
           <p className="font-sans text-sm text-neutral-mineral mt-2 leading-relaxed">
@@ -36,7 +43,7 @@ export function CraftStory() {
         {/* 3 Craft Pillars Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {CRAFT_PILLARS.map((pillar) => (
-            <div
+            <article
               key={pillar.id}
               className="bg-surface-card p-6 sm:p-7 rounded-xl shadow-ambient flex flex-col justify-between space-y-5 border border-border-subtle/80"
             >
@@ -66,26 +73,26 @@ export function CraftStory() {
                   {pillar.metricLabel}
                 </span>
               </div>
-            </div>
+            </article>
           ))}
         </div>
 
-        {/* Detail Metrics Strip */}
-        <div className="mt-12 bg-surface-card rounded-xl p-6 sm:p-8 shadow-ambient grid grid-cols-2 md:grid-cols-4 gap-6 text-center border border-border-subtle/80">
+        {/* Detail Metrics Strip as Semantic Definition List for AEO */}
+        <dl className="mt-12 bg-surface-card rounded-xl p-6 sm:p-8 shadow-ambient grid grid-cols-2 md:grid-cols-4 gap-6 text-center border border-border-subtle/80">
           {CRAFT_METRICS.map((metric, idx) => (
             <div key={idx} className="space-y-1">
-              <span className="font-serif text-2xl sm:text-3xl lg:text-4xl text-primary-container font-semibold block">
+              <dt className="font-serif text-2xl sm:text-3xl lg:text-4xl text-primary-container font-semibold block">
                 {metric.value}
-              </span>
-              <span className="block font-sans font-semibold text-xs sm:text-sm text-espresso-rich">
+              </dt>
+              <dd className="block font-sans font-semibold text-xs sm:text-sm text-espresso-rich m-0">
                 {metric.label}
-              </span>
-              <span className="font-sans text-[11px] text-neutral-mineral block">
+              </dd>
+              <dd className="font-sans text-[11px] text-neutral-mineral block m-0">
                 {metric.subtext}
-              </span>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

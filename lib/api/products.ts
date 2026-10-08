@@ -89,6 +89,10 @@ export async function getProductBySlug(slug: string): Promise<ProductDetailData 
   }
 
   if (error || !data) {
+    if (slug === "savannah-double-cocoon" || slug === "the-savannah-double-cocoon" || slug === "the-solstice-cocoon-egg") {
+      const { SAVANNAH_DOUBLE_COCOON } = await import("@/lib/data/product-detail-data");
+      return SAVANNAH_DOUBLE_COCOON;
+    }
     if (error) console.error(`Failed to fetch product (${slug}):`, error);
     return null;
   }

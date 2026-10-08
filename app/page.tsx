@@ -1,8 +1,53 @@
+import type { Metadata } from "next";
 import { HomeView } from "@/components/modules/home";
 import { getCategories, getCategorySilhouettes } from "@/lib/api/categories";
 import { getProducts } from "@/lib/api/products";
+import { siteConfig } from "@/lib/config/site";
+import { generateHomeStructuredData } from "@/lib/seo/home-schema";
 
-export const revalidate = 60; // revalidate every 60 seconds
+export const revalidate = 60; // revalidate ISR cache every 60 seconds
+
+export const metadata: Metadata = {
+  title: "Westernswings™ | Handcrafted Luxury Outdoor & Porch Swings",
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  alternates: {
+    canonical: siteConfig.url,
+  },
+  openGraph: {
+    title: "Westernswings™ | Handcrafted Luxury Outdoor & Porch Swings",
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: "Westernswings Handcrafted Luxury Swings in Wayanad, Kerala",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Westernswings™ | Handcrafted Luxury Outdoor & Porch Swings",
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
 
 export default async function HomePage() {
   const [categories, categorySilhouettes, products] = await Promise.all([
@@ -11,11 +56,23 @@ export default async function HomePage() {
     getProducts({ limit: 16 }),
   ]);
 
+  const structuredData = generateHomeStructuredData(products);
+
   return (
-    <HomeView
-      categories={categories}
-      categorySilhouettes={categorySilhouettes}
-      products={products}
-    />
+    <>
+      {/* Schema.org JSON-LD Structured Data for Search & Answer Engines */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
+
+      <HomeView
+        categories={categories}
+        categorySilhouettes={categorySilhouettes}
+        products={products}
+      />
+    </>
   );
 }
