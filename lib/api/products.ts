@@ -7,7 +7,7 @@ import { getCategoryBySlug } from "./categories";
 
 let cachedBadges: Map<number, BadgeRow> | null = null;
 
-async function getBadgesMap(): Promise<Map<number, BadgeRow>> {
+export async function getBadgesMap(): Promise<Map<number, BadgeRow>> {
   if (cachedBadges) return cachedBadges;
   const { data, error } = await supabase.from("Badge").select("*");
   const map = new Map<number, BadgeRow>();

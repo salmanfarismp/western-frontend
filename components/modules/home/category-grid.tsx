@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { CategorySilhouette } from "@/types/home";
@@ -44,7 +44,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
             >
               {/* Category Image Tile */}
               <div className="relative aspect-[3/4] overflow-hidden bg-surface-container">
-                <Image
+                <SafeImage
                   src={category.image}
                   alt={category.alt}
                   fill

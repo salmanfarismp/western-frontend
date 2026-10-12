@@ -131,7 +131,7 @@ export function generateHomeStructuredData(products: Product[]) {
           url: productUrl,
           name: product.name,
           description: product.description || product.subtitle,
-          image: product.image,
+          image: product.image || siteConfig.ogImage,
           brand: {
             "@type": "Brand",
             name: siteConfig.name,

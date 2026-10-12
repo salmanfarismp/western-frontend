@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import { X, Check, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types/home";
@@ -59,7 +59,7 @@ export function QuickViewModal({
 
         {/* Product Image Tile */}
         <div className="md:w-1/2 aspect-square md:aspect-auto relative bg-surface-container min-h-[280px]">
-          <Image
+          <SafeImage
             src={product.image}
             alt={product.alt}
             fill

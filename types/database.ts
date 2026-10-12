@@ -59,3 +59,16 @@ export interface ProductJoined extends ProductRow {
   ProductImage?: ProductImageRow[];
   ProductColor?: ProductColorRow[];
 }
+
+export interface HeroSectionRow {
+  id: number;
+  created_at: string;
+  product: string | null;
+  title: string | null;
+  subtitle: string | null;
+}
+
+export interface HeroSectionJoined extends HeroSectionRow {
+  Product?: ProductJoined | null;
+}
+

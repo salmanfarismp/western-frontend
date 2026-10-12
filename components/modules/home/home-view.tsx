@@ -15,19 +15,21 @@ import {
   FaqSection,
   LookbookGallery,
 } from "@/components/modules/home";
-import type { Product, CategorySilhouette } from "@/types/home";
+import type { Product, CategorySilhouette, HeroSectionData } from "@/types/home";
 import type { ProductCategoryRow } from "@/types/database";
 
 interface HomeViewProps {
   products: Product[];
   categories: ProductCategoryRow[];
   categorySilhouettes: CategorySilhouette[];
+  heroData?: HeroSectionData | null;
 }
 
 export function HomeView({
   products,
   categories,
   categorySilhouettes,
+  heroData,
 }: HomeViewProps) {
   return (
     <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
@@ -43,7 +45,7 @@ export function HomeView({
         <CategoryBar categories={categories} />
 
         {/* Editorial Hero Section (SSR with Priority LCP Image) */}
-        <HeroSection />
+        <HeroSection data={heroData} />
 
         {/* Shop By Silhouette / Categories */}
         <CategoryGrid categories={categorySilhouettes} />

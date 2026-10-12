@@ -9,3 +9,9 @@ export type { InputProps } from "./input";
 
 export { CircularGallery } from "./circular-gallery";
 export type { CircularGalleryProps, GalleryItem } from "./circular-gallery";
+
+export { Skeleton } from "./skeleton";
+export type { SkeletonProps } from "./skeleton";
+
+export { SafeImage } from "./safe-image";
+export type { SafeImageProps } from "./safe-image";

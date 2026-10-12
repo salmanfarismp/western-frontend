@@ -59,8 +59,14 @@ export function generateProductStructuredData(product: ProductDetailData) {
     url: productUrl,
     name: product.name,
     description: product.description || product.subtitle,
-    sku: product.id,
-    image: product.gallery.map((g) => g.src),
+    image:
+      product.gallery
+        .map((g) => g.src)
+        .filter((src) => Boolean(src && src.trim() !== "")).length > 0
+        ? product.gallery
+            .map((g) => g.src)
+            .filter((src) => Boolean(src && src.trim() !== ""))
+        : [siteConfig.ogImage],
     brand: {
       "@type": "Brand",
       name: siteConfig.name,

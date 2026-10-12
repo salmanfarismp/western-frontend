@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import { Star, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { CUSTOMER_REVIEWS } from "@/lib/data/home-data";
 
@@ -70,7 +70,7 @@ export function CustomerReviews() {
             >
               {/* Customer Porch Photo */}
               <div className="aspect-[16/10] relative overflow-hidden bg-surface-container">
-                <Image
+                <SafeImage
                   src={review.image}
                   alt={review.alt}
                   fill

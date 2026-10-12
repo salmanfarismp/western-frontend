@@ -9,7 +9,7 @@ import type {
   ProductJoined,
   BadgeRow,
 } from "@/types/database";
-import { resolveMediaUrl } from "@/lib/utils/media";
+import { resolveMediaUrl, FALLBACK_IMAGE_URL } from "@/lib/utils/media";
 
 export function mapCategoryRowToSilhouette(
   row: ProductCategoryRow,
@@ -19,7 +19,7 @@ export function mapCategoryRowToSilhouette(
     name: row.name || "Swings",
     description: row.nick_name || row.name || "Handcrafted luxury comfort",
     countLabel: "Curated Selection",
-    image: resolveMediaUrl(row.img_url),
+    image: resolveMediaUrl(row.img_url) || FALLBACK_IMAGE_URL,
     alt: row.name || "Handcrafted Swing Category",
     href: `/collections?category=${row.slug || row.id}`,
   };
@@ -65,14 +65,16 @@ export function mapProductJoinedToProduct(
   row: ProductJoined,
   badgesMap?: Map<number, BadgeRow>,
 ): Product {
-  const images = [...(row.ProductImage || [])].sort((a, b) => {
-    if (a.is_primary) return -1;
-    if (b.is_primary) return 1;
-    return (a.display_order ?? 0) - (b.display_order ?? 0);
-  });
+  const images = [...(row.ProductImage || [])]
+    .filter((img) => Boolean(img.img_url))
+    .sort((a, b) => {
+      if (a.is_primary) return -1;
+      if (b.is_primary) return 1;
+      return (a.display_order ?? 0) - (b.display_order ?? 0);
+    });
 
   const primaryImage = images[0];
-  const imageUrl = primaryImage ? resolveMediaUrl(primaryImage.img_url) : "";
+  const imageUrl = primaryImage ? resolveMediaUrl(primaryImage.img_url) : FALLBACK_IMAGE_URL;
   const imageAlt = primaryImage?.alt || row.name;
 
   const tones = (row.ProductColor || [])
@@ -115,18 +117,29 @@ export function mapProductJoinedToDetail(
   row: ProductJoined,
   badgesMap?: Map<number, BadgeRow>,
 ): ProductDetailData {
-  const images = [...(row.ProductImage || [])].sort((a, b) => {
-    if (a.is_primary && !b.is_primary) return -1;
-    if (!a.is_primary && b.is_primary) return 1;
-    return (a.display_order ?? 0) - (b.display_order ?? 0);
-  });
+  const images = [...(row.ProductImage || [])]
+    .filter((img) => Boolean(img.img_url))
+    .sort((a, b) => {
+      if (a.is_primary && !b.is_primary) return -1;
+      if (!a.is_primary && b.is_primary) return 1;
+      return (a.display_order ?? 0) - (b.display_order ?? 0);
+    });
 
   const gallery: ProductGalleryItem[] = images.map((img, idx) => ({
     id: `img-${img.id || idx}`,
     src: resolveMediaUrl(img.img_url),
     alt: img.alt || `${row.name} - View ${idx + 1}`,
     label: img.is_primary ? "Primary View" : `View ${idx + 1}`,
-  }));
+  })).filter((item) => Boolean(item.src));
+
+  if (gallery.length === 0) {
+    gallery.push({
+      id: "img-fallback",
+      src: FALLBACK_IMAGE_URL,
+      alt: `${row.name} - Westernswings Handcrafted`,
+      label: "Primary View",
+    });
+  }
 
   const tones: ToneOption[] = (row.ProductColor || [])
     .filter((pc) => pc.Color)

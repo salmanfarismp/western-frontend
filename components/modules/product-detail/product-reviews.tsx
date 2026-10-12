@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import {
   Star,
   ArrowLeft,
@@ -297,7 +297,7 @@ export function ProductReviews({
               {/* Optional Photo */}
               {rev.image && (
                 <div className="relative aspect-[16/10] overflow-hidden bg-canvas-linen">
-                  <Image
+                  <SafeImage
                     src={rev.image}
                     alt={rev.author}
                     fill

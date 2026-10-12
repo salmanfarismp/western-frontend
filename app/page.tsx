@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { HomeView } from "@/components/modules/home";
 import { getCategories, getCategorySilhouettes } from "@/lib/api/categories";
 import { getProducts } from "@/lib/api/products";
+import { getHeroSection } from "@/lib/api/hero";
 import { siteConfig } from "@/lib/config/site";
 import { generateHomeStructuredData } from "@/lib/seo/home-schema";
 
@@ -50,10 +51,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [categories, categorySilhouettes, products] = await Promise.all([
+  const [categories, categorySilhouettes, products, heroData] = await Promise.all([
     getCategories(),
     getCategorySilhouettes(),
     getProducts({ limit: 16 }),
+    getHeroSection(),
   ]);
 
   const structuredData = generateHomeStructuredData(products);
@@ -72,6 +74,7 @@ export default async function HomePage() {
         categories={categories}
         categorySilhouettes={categorySilhouettes}
         products={products}
+        heroData={heroData}
       />
     </>
   );

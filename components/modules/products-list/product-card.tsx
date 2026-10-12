@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import Link from "next/link";
 import { Star, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         href={`/product/${product.slug || product.id}`}
         className="relative aspect-square bg-canvas-linen overflow-hidden block"
       >
-        <Image
+        <SafeImage
           src={product.image}
           alt={product.alt}
           fill

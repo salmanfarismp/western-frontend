@@ -5,10 +5,32 @@ import { ArrowRight, ArrowUpRight, ShieldCheck, Truck, Star } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { HERO_FEATURED } from "@/lib/data/home-data";
 
-export function HeroSection() {
+import type { HeroSectionData } from "@/types/home";
+
+interface HeroSectionProps {
+  data?: HeroSectionData | null;
+}
+
+export function HeroSection({ data }: HeroSectionProps) {
   const b2bWhatsappUrl = `https://wa.me/916238473506?text=${encodeURIComponent(
     "Hello Westernswings, we are interested in B2B and commercial orders."
   )}`;
+
+  const title = data?.title || "Crafted for Quiet Moments & Gentle Breezes";
+  const subtitle =
+    data?.subtitle ||
+    "Surrender to the slow rhythm of the afternoon. When the sun hangs low and golden light spills across the deck, the WesternSwing Chair is waiting to welcome you home. Crafted with rugged, timeless elegance and engineered for a perfectly effortless sway, it invites you to kick off your boots, breathe in the open air, and let the motion set your pace.";
+
+  const featured = data?.featuredProduct || {
+    title: HERO_FEATURED.title,
+    slug: HERO_FEATURED.slug,
+    subtitle: HERO_FEATURED.subtitle,
+    price: HERO_FEATURED.price,
+    badge: HERO_FEATURED.badge,
+    rating: HERO_FEATURED.rating,
+    image: HERO_FEATURED.image,
+    alt: HERO_FEATURED.alt,
+  };
 
   return (
     <section
@@ -23,15 +45,11 @@ export function HeroSection() {
               id="hero-heading"
               className="font-serif text-3xl sm:text-3xl lg:text-4xl xl:text-[44px] font-semibold text-espresso-rich leading-[1.16] tracking-tight"
             >
-              Crafted for Quiet Moments &amp; Gentle Breezes
+              {title}
             </h1>
 
             <p className="font-sans text-sm sm:text-base text-neutral-mineral leading-relaxed max-w-xl">
-              Surrender to the slow rhythm of the afternoon. When the sun hangs low and
-              golden light spills across the deck, the WesternSwing Chair is waiting to welcome
-              you home. Crafted with rugged, timeless elegance and engineered for a perfectly
-              effortless sway, it invites you to kick off your boots, breathe in the open air,
-              and let the motion set your pace.
+              {subtitle}
             </p>
 
             {/* CTAs */}
@@ -93,8 +111,8 @@ export function HeroSection() {
           <div className="lg:col-span-6 relative flex items-center justify-center">
             <div className="relative w-full aspect-square max-w-[calc(100svh-var(--header-height)-48px)] xl:max-w-[560px] rounded-xl overflow-hidden shadow-ambient bg-surface-container border border-border-subtle/80">
               <Image
-                src={HERO_FEATURED.image}
-                alt={HERO_FEATURED.alt}
+                src={featured.image}
+                alt={featured.alt}
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -106,23 +124,23 @@ export function HeroSection() {
               <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 p-3.5 sm:p-4 rounded-lg bg-surface-card/95 backdrop-blur-md shadow-floating border border-border-subtle/60 flex items-center justify-between gap-3">
                 <div className="space-y-0.5 min-w-0">
                   <span className="text-[10px] text-terracotta-rich uppercase tracking-wider font-semibold block">
-                    {HERO_FEATURED.badge}
+                    {featured.badge}
                   </span>
                   <span className="font-serif text-sm sm:text-base lg:text-lg font-semibold text-espresso-rich block truncate">
-                    {HERO_FEATURED.title}
+                    {featured.title}
                   </span>
                   <span className="text-xs text-neutral-mineral block truncate">
-                    {HERO_FEATURED.subtitle} •{" "}
+                    {featured.subtitle} •{" "}
                     <span className="font-medium text-espresso-rich">
-                      {HERO_FEATURED.price}
+                      {featured.price}
                     </span>
                   </span>
                 </div>
 
                 <Link
-                  href={`/product/${HERO_FEATURED.slug}`}
+                  href={`/product/${featured.slug}`}
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary-container text-surface-card flex items-center justify-center hover:bg-moss-deep transition-all shadow-md shrink-0 cursor-pointer"
-                  aria-label="View The Solstice Cocoon Egg"
+                  aria-label={`View ${featured.title}`}
                 >
                   <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
@@ -140,7 +158,7 @@ export function HeroSection() {
                 ))}
               </div>
               <span className="font-sans text-xs sm:text-sm font-semibold text-espresso-rich leading-none">
-                {HERO_FEATURED.rating}
+                {featured.rating}
               </span>
             </div>
           </div>

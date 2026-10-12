@@ -77,3 +77,22 @@ export interface InstagramPost {
   link: string;
   title?: string;
 }
+
+export interface HeroFeaturedProduct {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string;
+  price: string;
+  badge: string;
+  rating: string;
+  image: string;
+  alt: string;
+}
+
+export interface HeroSectionData {
+  title: string;
+  subtitle: string;
+  featuredProduct: HeroFeaturedProduct | null;
+}
+

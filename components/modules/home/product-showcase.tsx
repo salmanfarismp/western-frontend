@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import Link from "next/link";
 import { Star, ShoppingBag, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -114,7 +114,7 @@ export function ProductShowcase({
                   href={`/product/${productSlug}`}
                   className="relative aspect-square bg-canvas-linen overflow-hidden block"
                 >
-                  <Image
+                  <SafeImage
                     src={product.image}
                     alt={product.alt}
                     fill
