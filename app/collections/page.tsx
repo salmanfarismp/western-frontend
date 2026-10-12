@@ -13,6 +13,7 @@ import {
 } from "@/components/modules/products-list";
 import { getCategories, getCategoryBySlug } from "@/lib/api/categories";
 import { getProducts } from "@/lib/api/products";
+import { getFaqs } from "@/lib/api/faq";
 import { siteConfig } from "@/lib/config/site";
 import { generateCollectionsStructuredData } from "@/lib/seo/collections-schema";
 import type { ProductCategory } from "@/types/home";
@@ -103,18 +104,20 @@ export default async function CollectionsPage({
       ? resolvedParams.category
       : "all") as ProductCategory;
 
-  const [categories, categoryRow, products] = await Promise.all([
+  const [categories, categoryRow, products, faqs] = await Promise.all([
     getCategories(),
     categoryParam !== "all" ? getCategoryBySlug(categoryParam) : null,
     getProducts({
       categorySlug: categoryParam === "all" ? undefined : categoryParam,
     }),
+    getFaqs(),
   ]);
 
   const structuredData = generateCollectionsStructuredData({
     categorySlug: categoryParam,
     categoryRow,
     products,
+    faqs,
   });
 
   return (
@@ -146,7 +149,7 @@ export default async function CollectionsPage({
         <ProductsGrid products={products} />
 
         {/* Sizing, Mounting & Care Guide FAQ (SSR Semantic Q&A for AEO) */}
-        <CollectionsFaqSection />
+        <CollectionsFaqSection faqs={faqs} />
 
         {/* Community & Instagram Lookbook 3D Gallery (Client Island) */}
         <LookbookGallery />

@@ -1,14 +1,16 @@
 import React from "react";
 import { getProductFaqs } from "@/lib/seo/product-schema";
 import type { ProductDetailData } from "@/lib/data/product-detail-data";
+import type { FaqItem } from "@/types/faq";
 import { HelpCircle, ChevronDown } from "lucide-react";
 
 interface ProductFaqSectionProps {
   product: ProductDetailData;
+  faqs?: FaqItem[];
 }
 
-export function ProductFaqSection({ product }: ProductFaqSectionProps) {
-  const faqs = getProductFaqs(product);
+export function ProductFaqSection({ product, faqs: customFaqs }: ProductFaqSectionProps) {
+  const faqs = customFaqs && customFaqs.length > 0 ? customFaqs : getProductFaqs(product);
 
   return (
     <section
@@ -38,7 +40,7 @@ export function ProductFaqSection({ product }: ProductFaqSectionProps) {
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <details
-              key={index}
+              key={faq.id ?? index}
               className="group bg-surface-cream/50 rounded-xl border border-border-subtle p-5 sm:p-6 transition-all shadow-2xs open:shadow-ambient open:border-primary-container/40"
             >
               <summary className="flex items-center justify-between cursor-pointer list-none font-serif text-base sm:text-lg font-semibold text-espresso-rich group-hover:text-primary-container transition-colors select-none gap-4">

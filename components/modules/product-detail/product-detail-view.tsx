@@ -16,15 +16,18 @@ import {
 } from "@/components/modules/product-detail";
 import type { ProductDetailData } from "@/lib/data/product-detail-data";
 import type { Product } from "@/types/home";
+import type { FaqItem } from "@/types/faq";
 
 interface ProductDetailViewProps {
   product: ProductDetailData;
   similarProducts?: Product[];
+  faqs?: FaqItem[];
 }
 
 export function ProductDetailView({
   product,
   similarProducts,
+  faqs,
 }: ProductDetailViewProps) {
   return (
     <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
@@ -76,7 +79,7 @@ export function ProductDetailView({
         />
 
         {/* Specifications & Model Installation FAQ (SSR Component for AEO) */}
-        <ProductFaqSection product={product} />
+        <ProductFaqSection product={product} faqs={faqs} />
 
         {/* Customer Reviews & Verified Stories Section (Client Island) */}
         <ProductReviews

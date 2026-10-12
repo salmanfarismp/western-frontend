@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailView } from "@/components/modules/product-detail";
 import { getProductBySlug, getProducts, getSimilarProducts } from "@/lib/api/products";
+import { getFaqs } from "@/lib/api/faq";
 import { siteConfig } from "@/lib/config/site";
 import { generateProductStructuredData } from "@/lib/seo/product-schema";
 
@@ -89,12 +90,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // Fetch similar products in the same category
-  const similarProducts = product.categoryId
-    ? await getSimilarProducts(product.categoryId, product.id, 4)
-    : [];
+  // Fetch similar products in the same category and unified FAQs in parallel
+  const [similarProducts, faqs] = await Promise.all([
+    product.categoryId
+      ? getSimilarProducts(product.categoryId, product.id, 4)
+      : Promise.resolve([]),
+    getFaqs(),
+  ]);
 
-  const structuredData = generateProductStructuredData(product);
+  const structuredData = generateProductStructuredData(product, faqs);
 
   return (
     <>
@@ -109,6 +113,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <ProductDetailView
         product={product}
         similarProducts={similarProducts}
+        faqs={faqs}
       />
     </>
   );

@@ -6,6 +6,7 @@ import { getHeroSection } from "@/lib/api/hero";
 import { getLifestyleImages } from "@/lib/api/lifestyle";
 import { siteConfig } from "@/lib/config/site";
 import { generateHomeStructuredData } from "@/lib/seo/home-schema";
+import { getFaqs } from "@/lib/api/faq";
 
 export const revalidate = 60; // revalidate ISR cache every 60 seconds
 
@@ -52,16 +53,17 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [categories, categorySilhouettes, products, heroData, lifestyleImages] =
+  const [categories, categorySilhouettes, products, heroData, lifestyleImages, faqs] =
     await Promise.all([
       getCategories(),
       getCategorySilhouettes(),
       getProducts({ limit: 4 }),
       getHeroSection(),
       getLifestyleImages(),
+      getFaqs(),
     ]);
 
-  const structuredData = generateHomeStructuredData(products);
+  const structuredData = generateHomeStructuredData(products, faqs);
 
   return (
     <>
@@ -79,6 +81,7 @@ export default async function HomePage() {
         products={products}
         heroData={heroData}
         lifestyleImages={lifestyleImages}
+        faqs={faqs}
       />
     </>
   );

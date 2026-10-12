@@ -1,10 +1,8 @@
 import { siteConfig } from "@/lib/config/site";
 import type { ProductDetailData } from "@/lib/data/product-detail-data";
+import type { FaqItem } from "@/types/faq";
 
-export interface ProductFaqItem {
-  question: string;
-  answer: string;
-}
+export type ProductFaqItem = FaqItem;
 
 export function getProductFaqs(product: ProductDetailData): ProductFaqItem[] {
   const isDaybed =
@@ -45,7 +43,10 @@ export function getProductFaqs(product: ProductDetailData): ProductFaqItem[] {
   ];
 }
 
-export function generateProductStructuredData(product: ProductDetailData) {
+export function generateProductStructuredData(
+  product: ProductDetailData,
+  customFaqs?: FaqItem[]
+) {
   const productUrl = `${siteConfig.url}/product/${product.slug || product.id}`;
   const categoryUrl = `${siteConfig.url}/collections?category=${encodeURIComponent(
     product.categorySlug || "all"
@@ -177,8 +178,9 @@ export function generateProductStructuredData(product: ProductDetailData) {
     ],
   };
 
-  // 3. Product-Specific FAQPage Schema
-  const faqs = getProductFaqs(product);
+  // 3. Product FAQPage Schema (uses customFaqs if provided, else product-specific faqs)
+  const faqs =
+    customFaqs && customFaqs.length > 0 ? customFaqs : getProductFaqs(product);
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

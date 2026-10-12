@@ -3,3 +3,4 @@ export { Navbar } from "./navbar";
 export { Footer } from "./footer";
 export { WhatsAppButton } from "./whatsapp-button";
 export { CategoryBar } from "./category-bar";
+export { FaqSection } from "./faq-section";

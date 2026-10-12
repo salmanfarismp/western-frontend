@@ -1,13 +1,11 @@
 import { siteConfig } from "@/lib/config/site";
 import type { Product } from "@/types/home";
 import type { ProductCategoryRow } from "@/types/database";
+import type { FaqItem } from "@/types/faq";
 
-export interface CollectionsFaqItem {
-  question: string;
-  answer: string;
-}
+export type CollectionsFaqItem = FaqItem;
 
-export const COLLECTIONS_FAQS: CollectionsFaqItem[] = [
+export const COLLECTIONS_FAQS: FaqItem[] = [
   {
     question: "How do I choose between a single cocoon egg chair and a double loveseat swing?",
     answer:
@@ -39,12 +37,14 @@ interface CollectionsStructuredDataParams {
   categorySlug?: string;
   categoryRow?: ProductCategoryRow | null;
   products: Product[];
+  faqs?: FaqItem[];
 }
 
 export function generateCollectionsStructuredData({
   categorySlug,
   categoryRow,
   products,
+  faqs = COLLECTIONS_FAQS,
 }: CollectionsStructuredDataParams) {
   const isFiltered = categorySlug && categorySlug !== "all";
   const categoryName =
@@ -173,7 +173,7 @@ export function generateCollectionsStructuredData({
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "@id": `${collectionUrl}/#faq`,
-    mainEntity: COLLECTIONS_FAQS.map((faq) => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
       acceptedAnswer: {

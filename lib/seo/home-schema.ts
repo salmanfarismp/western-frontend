@@ -1,12 +1,10 @@
 import { siteConfig } from "@/lib/config/site";
 import type { Product } from "@/types/home";
+import type { FaqItem } from "@/types/faq";
 
-export interface HomeFaqItem {
-  question: string;
-  answer: string;
-}
+export type HomeFaqItem = FaqItem;
 
-export const HOME_FAQS: HomeFaqItem[] = [
+export const HOME_FAQS: FaqItem[] = [
   {
     question: "Are Westernswings outdoor swings truly weatherproof in heavy rain and coastal sun?",
     answer:
@@ -39,7 +37,10 @@ export const HOME_FAQS: HomeFaqItem[] = [
   },
 ];
 
-export function generateHomeStructuredData(products: Product[]) {
+export function generateHomeStructuredData(
+  products: Product[],
+  faqs: FaqItem[] = HOME_FAQS
+) {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "FurnitureStore",
@@ -164,7 +165,7 @@ export function generateHomeStructuredData(products: Product[]) {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "@id": `${siteConfig.url}/#faq`,
-    mainEntity: HOME_FAQS.map((faq) => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
       acceptedAnswer: {

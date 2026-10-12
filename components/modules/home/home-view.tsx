@@ -17,6 +17,7 @@ import {
 } from "@/components/modules/home";
 import type { Product, CategorySilhouette, HeroSectionData } from "@/types/home";
 import type { ProductCategoryRow } from "@/types/database";
+import type { FaqItem } from "@/types/faq";
 
 interface HomeViewProps {
   products: Product[];
@@ -24,6 +25,7 @@ interface HomeViewProps {
   categorySilhouettes: CategorySilhouette[];
   heroData?: HeroSectionData | null;
   lifestyleImages?: string[];
+  faqs?: FaqItem[];
 }
 
 export function HomeView({
@@ -32,6 +34,7 @@ export function HomeView({
   categorySilhouettes,
   heroData,
   lifestyleImages,
+  faqs,
 }: HomeViewProps) {
   return (
     <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
@@ -65,7 +68,7 @@ export function HomeView({
         <CustomerReviews />
 
         {/* Buyer Guide & Specifications FAQ (SSR Semantic Q&A for AEO & Voice Search) */}
-        <FaqSection />
+        <FaqSection faqs={faqs} />
 
         {/* Community & Instagram Lookbook 3D Gallery (Client Island) */}
         <LookbookGallery images={lifestyleImages} />
