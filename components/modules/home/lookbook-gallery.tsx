@@ -2,9 +2,18 @@ import React from "react";
 import { LOOKBOOK_POSTS } from "@/lib/data/home-data";
 import { CircularGallery } from "@/components/ui/circular-gallery";
 
-export function LookbookGallery() {
-  const galleryItems = LOOKBOOK_POSTS.map((post) => ({
-    image: post.image,
+interface LookbookGalleryProps {
+  images?: string[];
+}
+
+export function LookbookGallery({ images }: LookbookGalleryProps = {}) {
+  const activeImages =
+    images && images.length > 0
+      ? images
+      : LOOKBOOK_POSTS.map((post) => post.image);
+
+  const galleryItems = activeImages.map((image) => ({
+    image,
   }));
 
   return (

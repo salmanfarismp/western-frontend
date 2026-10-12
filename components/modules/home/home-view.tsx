@@ -23,6 +23,7 @@ interface HomeViewProps {
   categories: ProductCategoryRow[];
   categorySilhouettes: CategorySilhouette[];
   heroData?: HeroSectionData | null;
+  lifestyleImages?: string[];
 }
 
 export function HomeView({
@@ -30,6 +31,7 @@ export function HomeView({
   categories,
   categorySilhouettes,
   heroData,
+  lifestyleImages,
 }: HomeViewProps) {
   return (
     <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
@@ -66,7 +68,7 @@ export function HomeView({
         <FaqSection />
 
         {/* Community & Instagram Lookbook 3D Gallery (Client Island) */}
-        <LookbookGallery />
+        <LookbookGallery images={lifestyleImages} />
       </main>
 
       {/* Footer with Business NAP & Contact Signals */}

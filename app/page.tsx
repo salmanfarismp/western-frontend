@@ -3,6 +3,7 @@ import { HomeView } from "@/components/modules/home";
 import { getCategories, getCategorySilhouettes } from "@/lib/api/categories";
 import { getProducts } from "@/lib/api/products";
 import { getHeroSection } from "@/lib/api/hero";
+import { getLifestyleImages } from "@/lib/api/lifestyle";
 import { siteConfig } from "@/lib/config/site";
 import { generateHomeStructuredData } from "@/lib/seo/home-schema";
 
@@ -51,12 +52,14 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [categories, categorySilhouettes, products, heroData] = await Promise.all([
-    getCategories(),
-    getCategorySilhouettes(),
-    getProducts({ limit: 4 }),
-    getHeroSection(),
-  ]);
+  const [categories, categorySilhouettes, products, heroData, lifestyleImages] =
+    await Promise.all([
+      getCategories(),
+      getCategorySilhouettes(),
+      getProducts({ limit: 4 }),
+      getHeroSection(),
+      getLifestyleImages(),
+    ]);
 
   const structuredData = generateHomeStructuredData(products);
 
@@ -75,6 +78,7 @@ export default async function HomePage() {
         categorySilhouettes={categorySilhouettes}
         products={products}
         heroData={heroData}
+        lifestyleImages={lifestyleImages}
       />
     </>
   );

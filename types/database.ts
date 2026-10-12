@@ -73,3 +73,10 @@ export interface HeroSectionJoined extends HeroSectionRow {
   Product?: ProductJoined | null;
 }
 
+export interface LifeStyleImageRow {
+  id: number;
+  idx?: number | null;
+  created_at: string;
+  img_url: string | null;
+}
+
