@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: "Westernswings",
-  legalName: "Westernswings Luxury Outdoor Furniture",
-  tagline: "Fine Crafted Outdoor Nests & Luxury Porch Swings",
+  legalName: "Westernswings",
+  tagline: "Fine Crafted Swing chairs",
   description:
-    "Handcrafted luxury outdoor swings, single cocoon egg chairs, double loveseats, and solid teak porch daybeds. Engineered with marine-grade alloy, UV-stabilized all-weather wicker, and waterproof Olefin cushions in Wayanad, Kerala.",
+    "Fine-crafted swing chairs from Wayanad, Kerala.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://westernswings.com",
   ogImage: "https://westernswings.com/og-image.jpg",
   contact: {

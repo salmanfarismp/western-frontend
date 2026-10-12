@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/config/site";
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "Westernswings | Handcrafted Luxury Outdoor Swings",
+    default: "Westernswings | Swing Chairs",
     template: "%s | Westernswings",
   },
   description: siteConfig.description,

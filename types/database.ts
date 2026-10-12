@@ -20,6 +20,7 @@ export interface ProductRow {
   computed_rating: number | null;
   computed_review_count: number | null;
   badge: number | null;
+  hangingKitIncluded: boolean;
 }
 
 export interface ProductImageRow {

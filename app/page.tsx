@@ -9,14 +9,14 @@ import { generateHomeStructuredData } from "@/lib/seo/home-schema";
 export const revalidate = 60; // revalidate ISR cache every 60 seconds
 
 export const metadata: Metadata = {
-  title: "Westernswings™ | Handcrafted Luxury Outdoor & Porch Swings",
+  title: "Westernswings™ | Fine-crafted Swing Chairs",
   description: siteConfig.description,
   keywords: siteConfig.keywords,
   alternates: {
     canonical: siteConfig.url,
   },
   openGraph: {
-    title: "Westernswings™ | Handcrafted Luxury Outdoor & Porch Swings",
+    title: "Westernswings™ | Fine-crafted Swing Chairs",
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: "Westernswings Handcrafted Luxury Swings in Wayanad, Kerala",
+        alt: "Westernswings Fine-crafted Swing chairs in Wayanad, Kerala",
       },
     ],
     locale: "en_IN",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Westernswings™ | Handcrafted Luxury Outdoor & Porch Swings",
+    title: "Westernswings™ | Fine-crafted Swing Chairs",
     description: siteConfig.description,
     images: [siteConfig.ogImage],
   },
@@ -54,7 +54,7 @@ export default async function HomePage() {
   const [categories, categorySilhouettes, products, heroData] = await Promise.all([
     getCategories(),
     getCategorySilhouettes(),
-    getProducts({ limit: 16 }),
+    getProducts({ limit: 4 }),
     getHeroSection(),
   ]);
 

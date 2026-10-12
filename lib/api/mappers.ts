@@ -192,7 +192,7 @@ export function mapProductJoinedToDetail(
     originalPrice,
     savings,
     tones,
-    hangingKitIncluded: true,
+    hangingKitIncluded: row.hangingKitIncluded,
     hangingKitDescription: "Grade-316 stainless carabiners & chains included",
     gallery,
     shippingLogistics: {
