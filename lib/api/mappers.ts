@@ -110,6 +110,7 @@ export function mapProductJoinedToProduct(
       "Adjustable Hanging Carabiners & Chains",
       "All-Weather Tufted Cushion",
     ],
+    isActive: row.is_active,
   };
 }
 
@@ -257,5 +258,6 @@ export function mapProductJoinedToDetail(
         verified: true,
       },
     ],
+    isActive: row.is_active,
   };
 }

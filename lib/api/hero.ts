@@ -52,7 +52,7 @@ export async function getHeroSection(): Promise<HeroSectionData> {
 
     let featuredProduct: HeroFeaturedProduct | null = null;
 
-    if (row.Product) {
+    if (row.Product && row.Product.is_active) {
       const badgesMap = await getBadgesMap();
       const product = mapProductJoinedToProduct(row.Product as ProductJoined, badgesMap);
       featuredProduct = {

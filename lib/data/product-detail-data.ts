@@ -63,6 +63,7 @@ export interface ProductDetailData {
   gallery: ProductGalleryItem[];
   shippingLogistics: LogisticsSection;
   careLogistics: LogisticsSection;
+  isActive?: boolean;
   reviews: ProductReviewItem[];
 }
 

@@ -21,6 +21,7 @@ export interface ProductRow {
   computed_review_count: number | null;
   badge: number | null;
   hangingKitIncluded: boolean;
+  is_active: boolean;
 }
 
 export interface ProductImageRow {

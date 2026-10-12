@@ -33,6 +33,7 @@ export async function getProducts(params?: GetProductsParams): Promise<Product[]
       ProductImage(*),
       ProductColor(*, Color(*))
     `)
+    .eq("is_active", true)
     .order("created_at", { ascending: false });
 
   if (params?.categoryId) {
@@ -75,6 +76,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetailData 
     .from("Product")
     .select(selectQuery)
     .eq("slug", slug)
+    .eq("is_active", true)
     .maybeSingle();
 
   // If not found by slug and slug is a valid UUID, fallback to lookup by id
@@ -83,6 +85,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetailData 
       .from("Product")
       .select(selectQuery)
       .eq("id", slug)
+      .eq("is_active", true)
       .maybeSingle();
     data = idRes.data;
     error = idRes.error;
@@ -115,6 +118,7 @@ export async function getSimilarProducts(
         ProductImage(*),
         ProductColor(*, Color(*))
       `)
+      .eq("is_active", true)
       .eq("category", categoryId)
       .neq("id", excludeProductId)
       .limit(limit),

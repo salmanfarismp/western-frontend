@@ -31,6 +31,7 @@ export interface Product {
   tones: ProductTone[];
   specs?: string;
   hardware?: string[];
+  isActive?: boolean;
 }
 
 export interface CategorySilhouette {
