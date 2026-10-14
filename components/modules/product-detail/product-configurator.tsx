@@ -39,6 +39,7 @@ export function ProductConfigurator({
   const [localToast, setLocalToast] = useState<string | null>(null);
 
   const selectedTone = tones.find((t) => t.id === selectedToneId) || tones[0];
+  const selectedToneName = selectedTone?.name || "";
   const orderTotal = price * quantity;
 
   const handleDecreaseQty = () => {
@@ -56,9 +57,10 @@ export function ProductConfigurator({
   const handleAdd = () => {
     setIsAdded(true);
     if (onAddToCart) {
-      onAddToCart(quantity, selectedTone.name, orderTotal);
+      onAddToCart(quantity, selectedToneName, orderTotal);
     } else {
-      setLocalToast(`Added ${quantity} × ${name} (${selectedTone.name}) to your cart`);
+      const toneLabel = selectedToneName ? ` (${selectedToneName})` : "";
+      setLocalToast(`Added ${quantity} × ${name}${toneLabel} to your cart`);
       setTimeout(() => setLocalToast(null), 3500);
     }
     setTimeout(() => {
@@ -68,7 +70,7 @@ export function ProductConfigurator({
 
   const handleBuy = () => {
     if (onBuyNow) {
-      onBuyNow(quantity, selectedTone.name, orderTotal);
+      onBuyNow(quantity, selectedToneName, orderTotal);
     } else {
       handleAdd();
     }
@@ -140,28 +142,44 @@ export function ProductConfigurator({
 
       {/* Option: Tone Selection */}
       <div className="space-y-2">
-       
+        {tones.length > 0 && (
+          <>
+            <div className="flex items-center justify-between text-xs sm:text-sm">
+              <span className="font-semibold text-neutral-charcoal">
+                Selected Finish:{" "}
+                <span className="font-normal text-on-surface-variant">
+                  {selectedToneName}
+                </span>
+              </span>
+              {selectedTone?.materialLabel && (
+                <span className="text-[11px] text-neutral-mineral uppercase tracking-wider">
+                  {selectedTone.materialLabel}
+                </span>
+              )}
+            </div>
 
-        <div className="flex items-center gap-3">
-          {tones.map((tone) => {
-            const isSelected = tone.id === selectedToneId;
-            return (
-              <button
-                key={tone.id}
-                type="button"
-                onClick={() => setSelectedToneId(tone.id)}
-                title={tone.name}
-                aria-label={tone.name}
-                style={{ backgroundColor: tone.colorHex }}
-                className={`w-8 h-8 rounded-full border border-black/10 shadow-2xs transition-all cursor-pointer ${
-                  isSelected
-                    ? "ring-2 ring-primary-container ring-offset-2 ring-offset-surface-card scale-105"
-                    : "hover:scale-105 opacity-90 hover:opacity-100"
-                }`}
-              />
-            );
-          })}
-        </div>
+            <div className="flex items-center gap-3">
+              {tones.map((tone) => {
+                const isSelected = tone.id === selectedToneId;
+                return (
+                  <button
+                    key={tone.id}
+                    type="button"
+                    onClick={() => setSelectedToneId(tone.id)}
+                    title={tone.name}
+                    aria-label={tone.name}
+                    style={{ backgroundColor: tone.colorHex }}
+                    className={`w-8 h-8 rounded-full border border-black/10 shadow-2xs transition-all cursor-pointer ${
+                      isSelected
+                        ? "ring-2 ring-primary-container ring-offset-2 ring-offset-surface-card scale-105"
+                        : "hover:scale-105 opacity-90 hover:opacity-100"
+                    }`}
+                  />
+                );
+              })}
+            </div>
+          </>
+        )}
 
         <div className="pt-1 text-xs">
           <a

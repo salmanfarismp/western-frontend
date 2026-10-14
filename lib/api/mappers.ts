@@ -62,6 +62,13 @@ function resolveBadge(
   }
 }
 
+function formatHex(hashcode?: string | null): string {
+  if (!hashcode) return "";
+  const clean = hashcode.trim();
+  if (!clean) return "";
+  return clean.startsWith("#") ? clean : `#${clean}`;
+}
+
 export function mapProductJoinedToProduct(
   row: ProductJoined,
   badgesMap?: Map<number, BadgeRow>,
@@ -79,16 +86,12 @@ export function mapProductJoinedToProduct(
   const imageAlt = primaryImage?.alt || row.name;
 
   const tones = (row.ProductColor || [])
-    .filter((pc) => pc.Color)
-    .map((pc) => {
-      const hex = pc.Color!.hashcode.startsWith("#")
-        ? pc.Color!.hashcode
-        : `#${pc.Color!.hashcode}`;
-      return {
-        name: pc.Color!.name,
-        hex,
-      };
-    });
+    .filter((pc) => Boolean(pc.Color))
+    .map((pc) => ({
+      name: pc.Color?.name || "",
+      hex: formatHex(pc.Color?.hashcode),
+    }))
+    .filter((tone) => tone.hex !== "");
 
   return {
     id: row.id,
@@ -147,18 +150,14 @@ export function mapProductJoinedToDetail(
   }
 
   const tones: ToneOption[] = (row.ProductColor || [])
-    .filter((pc) => pc.Color)
-    .map((pc) => {
-      const hex = pc.Color!.hashcode.startsWith("#")
-        ? pc.Color!.hashcode
-        : `#${pc.Color!.hashcode}`;
-      return {
-        id: `color-${pc.Color!.id}`,
-        name: pc.Color!.name,
-        colorHex: hex,
-        materialLabel: "All-Weather Wicker",
-      };
-    });
+    .filter((pc) => Boolean(pc.Color))
+    .map((pc) => ({
+      id: `color-${pc.Color?.id || ""}`,
+      name: pc.Color?.name || "",
+      colorHex: formatHex(pc.Color?.hashcode),
+      materialLabel: "All-Weather Wicker",
+    }))
+    .filter((tone) => tone.colorHex !== "");
 
   const badgeObj = resolveBadge(row.badge, badgesMap);
   const badges: ProductDetailData["badges"] = badgeObj
