@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { SafeImage } from "@/components/ui/safe-image";
 import {
   Star,
@@ -24,7 +24,12 @@ export function ProductReviews({
   rating,
   reviewsCount,
 }: ProductReviewsProps) {
-  const [reviewsList, setReviewsList] = useState<ProductReviewItem[]>(initialReviews);
+  const [userReviews, setUserReviews] = useState<ProductReviewItem[]>([]);
+  const reviewsList = useMemo(
+    () => [...userReviews, ...initialReviews],
+    [userReviews, initialReviews]
+  );
+
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newRating, setNewRating] = useState(5);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
@@ -35,12 +40,40 @@ export function ProductReviews({
   const [formSuccessMessage, setFormSuccessMessage] = useState<string | null>(null);
 
   const scrollTrackRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScrollBounds = useCallback(() => {
+    if (!scrollTrackRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollTrackRef.current;
+    // Allow a small 4px threshold for subpixel rounding
+    setCanScrollLeft(scrollLeft > 4);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    checkScrollBounds();
+    const el = scrollTrackRef.current;
+    if (!el) return;
+
+    el.addEventListener("scroll", checkScrollBounds, { passive: true });
+    window.addEventListener("resize", checkScrollBounds);
+
+    return () => {
+      el.removeEventListener("scroll", checkScrollBounds);
+      window.removeEventListener("resize", checkScrollBounds);
+    };
+  }, [checkScrollBounds, reviewsList]);
 
   const handleScroll = (direction: "left" | "right") => {
-    if (scrollTrackRef.current) {
-      const scrollAmount = direction === "left" ? -380 : 380;
-      scrollTrackRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    if (!scrollTrackRef.current) return;
+    const container = scrollTrackRef.current;
+    // Scroll by the full visible width to move the entire set of cards
+    const scrollAmount = container.clientWidth;
+    container.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
   };
 
   const handleSubmitReview = (e: React.FormEvent) => {
@@ -58,7 +91,10 @@ export function ProductReviews({
       verified: true,
     };
 
-    setReviewsList((prev) => [newReview, ...prev]);
+    setUserReviews((prev) => [newReview, ...prev]);
+    if (scrollTrackRef.current) {
+      scrollTrackRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    }
     setShowReviewForm(false);
     setName("");
     setLocation("");
@@ -94,12 +130,12 @@ export function ProductReviews({
                 <div className="flex items-center gap-1 text-terracotta-soft text-xs">
                   <Star className="w-3.5 h-3.5 fill-current text-terracotta-soft" />
                   <span className="font-semibold text-espresso-rich text-xs">
-                    {rating.toFixed(1)}
+                    {reviewsCount > 0 ? rating.toFixed(1) : "New"}
                   </span>
                 </div>
                 <span className="text-xs text-neutral-mineral">•</span>
                 <span className="text-[11px] font-sans text-on-surface-variant font-medium">
-                  {reviewsCount} reviews across India
+                  {reviewsCount === 1 ? "1 review across India" : `${reviewsCount} reviews across India`}
                 </span>
               </div>
             </div>
@@ -110,24 +146,28 @@ export function ProductReviews({
 
           {/* Action Buttons */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => handleScroll("left")}
-                aria-label="Previous review"
-                className="w-10 h-10 rounded-full border border-border-subtle bg-surface-card flex items-center justify-center text-espresso-rich hover:bg-surface-cream transition-colors shadow-2xs cursor-pointer"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleScroll("right")}
-                aria-label="Next review"
-                className="w-10 h-10 rounded-full border border-border-subtle bg-surface-card flex items-center justify-center text-espresso-rich hover:bg-surface-cream transition-colors shadow-2xs cursor-pointer"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+            {reviewsList.length > 1 && (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleScroll("left")}
+                  disabled={!canScrollLeft}
+                  aria-label="Previous reviews"
+                  className="w-10 h-10 rounded-full border border-border-subtle bg-surface-card flex items-center justify-center text-espresso-rich hover:bg-surface-cream transition-all shadow-2xs disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleScroll("right")}
+                  disabled={!canScrollRight}
+                  aria-label="Next reviews"
+                  className="w-10 h-10 rounded-full border border-border-subtle bg-surface-card flex items-center justify-center text-espresso-rich hover:bg-surface-cream transition-all shadow-2xs disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
 
             <button
               type="button"
@@ -284,79 +324,103 @@ export function ProductReviews({
           </div>
         )}
 
-        {/* Verified Reviews Cards Grid */}
-        <div
-          ref={scrollTrackRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 overflow-x-auto pb-1"
-        >
-          {reviewsList.map((rev) => (
-            <div
-              key={rev.id}
-              className="bg-white rounded-2xl border border-border-subtle overflow-hidden shadow-2xs hover:shadow-ambient transition-shadow flex flex-col justify-between"
-            >
-              {/* Optional Photo */}
-              {rev.image && (
-                <div className="relative aspect-[16/10] overflow-hidden bg-canvas-linen">
-                  <SafeImage
-                    src={rev.image}
-                    alt={rev.author}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
-                  />
-                  {rev.setupTag && (
-                    <span className="absolute top-3 left-3 bg-surface-bright/90 backdrop-blur-xs text-espresso-rich text-[10px] font-sans uppercase tracking-wider px-2 py-0.5 rounded-md font-semibold shadow-2xs">
-                      {rev.setupTag}
-                    </span>
-                  )}
-                </div>
-              )}
+        {/* Verified Reviews Cards Grid or Empty State */}
+        {reviewsList.length === 0 ? (
+          <div className="text-center py-12 px-4 rounded-2xl bg-surface-cream/50 border border-border-subtle/80 max-w-md mx-auto">
+            <Star className="w-8 h-8 text-neutral-mineral/40 mx-auto mb-2.5" />
+            <h3 className="font-serif text-base sm:text-lg font-semibold text-espresso-rich">
+              No reviews yet for this piece
+            </h3>
+            <p className="text-xs text-on-surface-variant mt-1">
+              Be the first to share your veranda story with fellow porch lovers.
+            </p>
+          </div>
+        ) : (
+          <div
+            ref={scrollTrackRef}
+            className="flex overflow-x-auto scrollbar-none snap-x snap-mandatory gap-4 sm:gap-6 pb-3 pt-1 -mx-2 px-2 sm:mx-0 sm:px-0"
+          >
+            {reviewsList.map((rev) => (
+              <div
+                key={rev.id}
+                className="w-[85vw] max-w-[340px] md:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] shrink-0 snap-start bg-white rounded-2xl border border-border-subtle overflow-hidden shadow-2xs hover:shadow-ambient flex flex-col justify-between transition-shadow"
+              >
+                {/* Optional Photo */}
+                {rev.image && (
+                  <div className="relative aspect-[16/10] overflow-hidden bg-canvas-linen">
+                    <SafeImage
+                      src={rev.image}
+                      alt={rev.author}
+                      fill
+                      sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                    {rev.setupTag && (
+                      <span className="absolute top-3 left-3 bg-surface-bright/90 backdrop-blur-xs text-espresso-rich text-[10px] font-sans uppercase tracking-wider px-2 py-0.5 rounded-md font-semibold shadow-2xs">
+                        {rev.setupTag}
+                      </span>
+                    )}
+                  </div>
+                )}
 
-              {/* Review Content */}
-              <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1 text-terracotta-soft">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3.5 h-3.5 ${
-                          i < rev.rating
-                            ? "fill-current text-terracotta-soft"
-                            : "text-border-subtle fill-none"
-                        }`}
-                      />
-                    ))}
-                    <span className="text-[11px] text-neutral-mineral ml-1">
-                      {rev.rating.toFixed(1)}
-                    </span>
+                {/* Review Content */}
+                <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1 text-terracotta-soft">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3.5 h-3.5 ${
+                            i < rev.rating
+                              ? "fill-current text-terracotta-soft"
+                              : "text-border-subtle fill-none"
+                          }`}
+                        />
+                      ))}
+                      <span className="text-[11px] text-neutral-mineral ml-1">
+                        {rev.rating.toFixed(1)}
+                      </span>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-espresso-rich italic leading-relaxed">
+                      {rev.quote}
+                    </p>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-espresso-rich italic leading-relaxed">
-                    {rev.quote}
-                  </p>
-                </div>
+                  <div className="pt-2 flex items-center justify-between border-t border-border-subtle/60">
+                    <div>
+                      <span className="text-xs sm:text-sm font-semibold text-espresso-rich block">
+                        {rev.author}
+                      </span>
+                      <span className="text-[10px] sm:text-[11px] text-neutral-mineral">
+                        {rev.location ? `${rev.location} • ` : ""}{rev.timeAgo}
+                      </span>
+                    </div>
 
-                <div className="pt-2 flex items-center justify-between border-t border-border-subtle/60">
-                  <div>
-                    <span className="text-xs sm:text-sm font-semibold text-espresso-rich block">
-                      {rev.author}
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] text-neutral-mineral">
-                      {rev.location} • {rev.timeAgo}
-                    </span>
+                    {rev.verified && (
+                      <span className="inline-flex items-center gap-1 bg-surface-container-low border border-border-subtle/60 px-2 py-0.5 rounded-full text-moss-deep text-[10px] font-medium">
+                        <BadgeCheck className="w-3.5 h-3.5 text-primary-container" />
+                        Verified Buyer
+                      </span>
+                    )}
                   </div>
-
-                  {rev.verified && (
-                    <span className="inline-flex items-center gap-1 bg-surface-container-low border border-border-subtle/60 px-2 py-0.5 rounded-full text-moss-deep text-[10px] font-medium">
-                      <BadgeCheck className="w-3.5 h-3.5 text-primary-container" />
-                      Verified Buyer
-                    </span>
-                  )}
                 </div>
+
+                {/* Optional Store Response */}
+                {rev.replay && (
+                  <div className="mx-5 mb-5 p-3.5 bg-surface-cream rounded-xl border border-border-subtle/70 text-xs">
+                    <span className="font-semibold text-espresso-rich block mb-0.5">
+                      Response from Westernswings
+                    </span>
+                    <p className="text-on-surface-variant italic leading-relaxed">
+                      {rev.replay}
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

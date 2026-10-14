@@ -15,7 +15,7 @@ import {
   FaqSection,
   LookbookGallery,
 } from "@/components/modules/home";
-import type { Product, CategorySilhouette, HeroSectionData } from "@/types/home";
+import type { Product, CategorySilhouette, HeroSectionData, CustomerReview } from "@/types/home";
 import type { ProductCategoryRow } from "@/types/database";
 import type { FaqItem } from "@/types/faq";
 
@@ -26,6 +26,7 @@ interface HomeViewProps {
   heroData?: HeroSectionData | null;
   lifestyleImages?: string[];
   faqs?: FaqItem[];
+  customerReviews?: CustomerReview[];
 }
 
 export function HomeView({
@@ -35,6 +36,7 @@ export function HomeView({
   heroData,
   lifestyleImages,
   faqs,
+  customerReviews,
 }: HomeViewProps) {
   return (
     <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
@@ -65,7 +67,7 @@ export function HomeView({
         <CraftStory />
 
         {/* Customer Verified Veranda Reviews (Client Island Carousel) */}
-        <CustomerReviews />
+        <CustomerReviews reviews={customerReviews} />
 
         {/* Buyer Guide & Specifications FAQ (SSR Semantic Q&A for AEO & Voice Search) */}
         <FaqSection faqs={faqs} />

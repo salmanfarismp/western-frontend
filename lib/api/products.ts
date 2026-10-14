@@ -4,6 +4,7 @@ import type { Product } from "@/types/home";
 import type { ProductDetailData } from "@/lib/data/product-detail-data";
 import { mapProductJoinedToProduct, mapProductJoinedToDetail } from "./mappers";
 import { getCategoryBySlug } from "./categories";
+import { getProductReviews } from "./reviews";
 
 let cachedBadges: Map<number, BadgeRow> | null = null;
 
@@ -100,8 +101,17 @@ export async function getProductBySlug(slug: string): Promise<ProductDetailData 
     return null;
   }
 
-  const badgesMap = await getBadgesMap();
-  return mapProductJoinedToDetail(data as unknown as ProductJoined, badgesMap);
+  const [badgesMap, reviews] = await Promise.all([
+    getBadgesMap(),
+    getProductReviews(data.id),
+  ]);
+
+  const reviewsCount = reviews.length;
+  const rating = reviewsCount > 0
+    ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / reviewsCount).toFixed(1))
+    : (data.computed_rating ?? 0);
+
+  return mapProductJoinedToDetail(data as unknown as ProductJoined, badgesMap, reviews, rating, reviewsCount);
 }
 
 export async function getSimilarProducts(

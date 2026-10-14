@@ -35,6 +35,7 @@ export interface ProductReviewItem {
   quote: string;
   image?: string;
   verified: boolean;
+  replay?: string | null;
 }
 
 export interface ProductDetailData {

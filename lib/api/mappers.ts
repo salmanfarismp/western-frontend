@@ -3,6 +3,7 @@ import type {
   ProductDetailData,
   ProductGalleryItem,
   ToneOption,
+  ProductReviewItem,
 } from "@/lib/data/product-detail-data";
 import type {
   ProductCategoryRow,
@@ -117,6 +118,9 @@ export function mapProductJoinedToProduct(
 export function mapProductJoinedToDetail(
   row: ProductJoined,
   badgesMap?: Map<number, BadgeRow>,
+  reviews: ProductReviewItem[] = [],
+  customRating?: number,
+  customReviewsCount?: number,
 ): ProductDetailData {
   const images = [...(row.ProductImage || [])]
     .filter((img) => Boolean(img.img_url))
@@ -185,8 +189,8 @@ export function mapProductJoinedToDetail(
     breadcrumbCategory: row.ProductCategory?.name || "Swings",
     badges,
     inventoryStatus: "Ready to Ship in 48 Hours",
-    rating: row.computed_rating ?? 5.0,
-    reviewsCount: Number(row.computed_review_count ?? 0),
+    rating: customRating !== undefined ? customRating : (row.computed_rating ?? 0),
+    reviewsCount: customReviewsCount !== undefined ? customReviewsCount : Number(row.computed_review_count ?? 0),
     subtitle: row.subtitle || "",
     description: row.description || "",
     price,
@@ -234,30 +238,7 @@ export function mapProductJoinedToDetail(
         },
       ],
     },
-    reviews: [
-      {
-        id: "rev-1",
-        author: "Meera K.",
-        location: "Bengaluru, KA",
-        timeAgo: "2 weeks ago",
-        rating: 5,
-        setupTag: "Balcony Sanctuary",
-        quote:
-          "The build quality is exceptional. It transformed our veranda into our absolute favorite spot in the house.",
-        verified: true,
-      },
-      {
-        id: "rev-2",
-        author: "Rahul S.",
-        location: "Mumbai, MH",
-        timeAgo: "1 month ago",
-        rating: 5,
-        setupTag: "Garden Patio",
-        quote:
-          "Extremely comfortable and sturdy. Delivery was prompt and seamless.",
-        verified: true,
-      },
-    ],
+    reviews,
     isActive: row.is_active,
   };
 }

@@ -5,4 +5,5 @@ export * from "./products";
 export * from "./hero";
 export * from "./lifestyle";
 export * from "./faq";
+export * from "./reviews";
 

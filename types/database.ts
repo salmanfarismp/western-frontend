@@ -89,3 +89,26 @@ export interface FaqRow {
   is_active: boolean | null;
 }
 
+export interface ReviewRow {
+  id: number;
+  created_at: string;
+  name: string | null;
+  location: string | null;
+  message: string | null;
+  product_id: string | null;
+  rating: number | null;
+  img_url: string | null;
+  is_verified: boolean | null;
+  highlighted: boolean | null;
+  is_active: boolean | null;
+  replay: string | null;
+}
+
+export interface ReviewJoined extends ReviewRow {
+  Product?: {
+    id: string;
+    name: string;
+    slug?: string | null;
+  } | null;
+}
+

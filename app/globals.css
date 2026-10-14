@@ -253,4 +253,13 @@ body {
   .link-underline:hover::after {
     transform: scaleX(1);
   }
+
+  /* Scrollbar hiding utilities */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
