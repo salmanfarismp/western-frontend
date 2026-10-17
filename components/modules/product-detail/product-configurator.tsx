@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { Star, CheckCircle2, Lock, ShoppingBag, Zap, ArrowRight, Minus, Plus, Check } from "lucide-react";
 import type { ToneOption } from "@/lib/data/product-detail-data";
+import { useCart } from "@/context/cart-context";
 
 interface ProductConfiguratorProps {
+  productId?: string;
   name: string;
   subtitle: string;
   price: number;
@@ -20,6 +22,7 @@ interface ProductConfiguratorProps {
 }
 
 export function ProductConfigurator({
+  productId,
   name,
   subtitle,
   price,
@@ -33,6 +36,7 @@ export function ProductConfigurator({
   onAddToCart,
   onBuyNow,
 }: ProductConfiguratorProps) {
+  const { addToCart, openCart } = useCart();
   const [selectedToneId, setSelectedToneId] = useState<string>(tones[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
@@ -54,25 +58,32 @@ export function ProductConfigurator({
     }
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     setIsAdded(true);
+    if (productId) {
+      await addToCart(productId, quantity);
+    }
     if (onAddToCart) {
       onAddToCart(quantity, selectedToneName, orderTotal);
-    } else {
+    } else if (!productId) {
       const toneLabel = selectedToneName ? ` (${selectedToneName})` : "";
       setLocalToast(`Added ${quantity} × ${name}${toneLabel} to your cart`);
       setTimeout(() => setLocalToast(null), 3500);
+      openCart();
     }
     setTimeout(() => {
       setIsAdded(false);
     }, 2000);
   };
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
+    if (productId) {
+      await addToCart(productId, quantity);
+    }
     if (onBuyNow) {
       onBuyNow(quantity, selectedToneName, orderTotal);
     } else {
-      handleAdd();
+      openCart();
     }
   };
 

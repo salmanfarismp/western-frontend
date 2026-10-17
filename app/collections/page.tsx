@@ -134,7 +134,7 @@ export default async function CollectionsPage({
       <AnnouncementBar />
 
       {/* Main Navigation Header (Client Island) */}
-      <Navbar cartCount={3} showSearch={false} />
+      <Navbar showSearch={false} />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full">

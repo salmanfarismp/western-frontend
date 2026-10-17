@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, ShoppingBag, Menu, X, CircleUserRound } from "lucide-react";
+import { useCart } from "@/context/cart-context";
 
 interface NavbarProps {
   cartCount?: number;
@@ -13,11 +14,15 @@ interface NavbarProps {
 }
 
 export function Navbar({
-  cartCount = 3,
-  onCartClick,
+  cartCount: propCartCount,
+  onCartClick: propOnCartClick,
   onSearch,
   showSearch,
 }: NavbarProps) {
+  const { cartCount: liveCartCount, openCart } = useCart();
+  const cartCount = propCartCount !== undefined ? propCartCount : liveCartCount;
+  const onCartClick = propOnCartClick || openCart;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

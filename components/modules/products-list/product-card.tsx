@@ -7,6 +7,7 @@ import { Star, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types/home";
+import { useCart } from "@/context/cart-context";
 
 interface ProductCardProps {
   product: Product;
@@ -14,6 +15,15 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+  const { addToCart } = useCart();
+
+  const handleAdd = () => {
+    if (onAddToCart) {
+      onAddToCart(product);
+    } else {
+      addToCart(product.id, 1);
+    }
+  };
   return (
     <article className="group bg-surface-card rounded-lg sm:rounded-xl overflow-hidden shadow-ambient hover:shadow-floating transition-all duration-300 flex flex-col border border-border-subtle/80">
       {/* Product Image Tile */}
@@ -107,7 +117,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => onAddToCart?.(product)}
+              onClick={handleAdd}
               className="flex items-center gap-1 sm:gap-1.5 text-xs px-2 sm:px-3 h-7 sm:h-8 cursor-pointer"
             >
               <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

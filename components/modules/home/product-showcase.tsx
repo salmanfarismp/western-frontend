@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Product, ProductCategory } from "@/types/home";
 import type { ProductCategoryRow } from "@/types/database";
+import { useCart } from "@/context/cart-context";
 
 interface ProductShowcaseProps {
   products: Product[];
@@ -20,6 +21,7 @@ export function ProductShowcase({
   categories,
   onAddToCart,
 }: ProductShowcaseProps) {
+  const { addToCart } = useCart();
   const [activeFilter, setActiveFilter] = useState<ProductCategory>("all");
   const [localToastMessage, setLocalToastMessage] = useState<string | null>(null);
 
@@ -27,6 +29,7 @@ export function ProductShowcase({
     if (onAddToCart) {
       onAddToCart(product);
     } else {
+      addToCart(product.id, 1);
       setLocalToastMessage(`Added ${product.name} to your sanctuary cart`);
       setTimeout(() => {
         setLocalToastMessage(null);

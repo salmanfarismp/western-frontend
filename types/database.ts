@@ -112,3 +112,22 @@ export interface ReviewJoined extends ReviewRow {
   } | null;
 }
 
+export interface CartRow {
+  id: number;
+  created_at: string;
+  device_id: string | null;
+  profile: number | null;
+}
+
+export interface CartItemRow {
+  id: number;
+  created_at: string;
+  product: string;
+  quantity: number;
+  cart: number;
+}
+
+export interface CartItemJoined extends CartItemRow {
+  Product?: ProductJoined | null;
+}
+

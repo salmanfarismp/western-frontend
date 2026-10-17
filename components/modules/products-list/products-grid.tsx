@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import type { Product } from "@/types/home";
 import { ProductCard } from "./product-card";
+import { useCart } from "@/context/cart-context";
 
 interface ProductsGridProps {
   products: Product[];
@@ -12,12 +13,14 @@ interface ProductsGridProps {
 }
 
 export function ProductsGrid({ products, onAddToCart }: ProductsGridProps) {
+  const { addToCart } = useCart();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleAddToCart = (product: Product) => {
     if (onAddToCart) {
       onAddToCart(product);
     } else {
+      addToCart(product.id, 1);
       setToastMessage(`Added ${product.name} to your sanctuary cart`);
       setTimeout(() => {
         setToastMessage(null);

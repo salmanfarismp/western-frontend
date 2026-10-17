@@ -39,7 +39,7 @@ export function LookbookGallery({ images }: LookbookGalleryProps = {}) {
             items={galleryItems}
             bend={0.5}
             borderRadius={0.06}
-            scrollEase={0.04}
+            scrollEase={0.2}
             enableWaviness={false}
           />
         </div>

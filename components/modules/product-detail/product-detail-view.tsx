@@ -35,7 +35,7 @@ export function ProductDetailView({
       <AnnouncementBar />
 
       {/* Main Navigation Header (Client Island) */}
-      <Navbar cartCount={3} showSearch={false} />
+      <Navbar showSearch={false} />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full">
@@ -58,6 +58,7 @@ export function ProductDetailView({
 
             {/* Configurator & Commerce Engine (Client Island) */}
             <ProductConfigurator
+              productId={product.id}
               name={product.name}
               subtitle={product.subtitle}
               price={product.price}
