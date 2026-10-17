@@ -12,6 +12,7 @@ import {
   Check,
 } from "lucide-react";
 import type { ProductReviewItem } from "@/lib/data/product-detail-data";
+import { useAuth } from "@/context/auth-context";
 
 interface ProductReviewsProps {
   reviews: ProductReviewItem[];
@@ -24,6 +25,7 @@ export function ProductReviews({
   rating,
   reviewsCount,
 }: ProductReviewsProps) {
+  const { user, displayName, profile, openAuthModal } = useAuth();
   const [userReviews, setUserReviews] = useState<ProductReviewItem[]>([]);
   const reviewsList = useMemo(
     () => [...userReviews, ...initialReviews],
@@ -38,6 +40,21 @@ export function ProductReviews({
   const [headline, setHeadline] = useState("");
   const [story, setStory] = useState("");
   const [formSuccessMessage, setFormSuccessMessage] = useState<string | null>(null);
+
+  // Auto-fill reviewer name and location from authenticated profile
+  useEffect(() => {
+    if (user) {
+      if (!name && displayName && displayName !== "Guest") {
+        setName(displayName);
+      }
+      if (!location) {
+        const locParts = [profile?.city, profile?.state].filter(Boolean);
+        if (locParts.length > 0) {
+          setLocation(locParts.join(", "));
+        }
+      }
+    }
+  }, [user, displayName, profile, name, location]);
 
   const scrollTrackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -171,7 +188,17 @@ export function ProductReviews({
 
             <button
               type="button"
-              onClick={() => setShowReviewForm((prev) => !prev)}
+              onClick={() => {
+                if (!user) {
+                  openAuthModal({
+                    title: "Sign In to Write a Review",
+                    description:
+                      "Sign in with Google to share your experience and submit verified feedback on your swing chair.",
+                  });
+                  return;
+                }
+                setShowReviewForm((prev) => !prev);
+              }}
               className="inline-flex items-center gap-2 bg-surface-cream hover:bg-surface-container text-espresso-rich border border-border-subtle hover:border-moss-deep text-xs sm:text-sm py-2.5 px-4 rounded-xl font-medium shadow-2xs transition-all cursor-pointer"
             >
               <PenSquare className="w-4 h-4 text-moss-deep" />

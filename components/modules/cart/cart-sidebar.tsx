@@ -14,9 +14,11 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useCart } from "@/context/cart-context";
+import { useAuth } from "@/context/auth-context";
 import { SafeImage } from "@/components/ui/safe-image";
 
 export function CartSidebar() {
+  const { user, openAuthModal } = useAuth();
   const {
     items,
     cartCount,
@@ -245,6 +247,14 @@ export function CartSidebar() {
             {/* Action Button */}
             <button
               onClick={() => {
+                if (!user) {
+                  openAuthModal({
+                    title: "Sign In to Checkout",
+                    description:
+                      "Sign in with Google to complete your purchase, save delivery preferences, and track shipments.",
+                  });
+                  return;
+                }
                 alert("Proceeding to checkout with " + cartCount + " item(s).");
               }}
               className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-primary-container hover:bg-moss-deep text-surface-card text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-sm cursor-pointer"

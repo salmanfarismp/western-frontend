@@ -10,73 +10,18 @@ interface ProductsHeroProps {
   totalModels?: number;
 }
 
-interface CategoryEditorial {
-  eyebrow: string;
-  title: string;
-  description: string;
-}
-
-function getCategoryEditorial(category: string, activeRow?: ProductCategoryRow): CategoryEditorial {
-  const cat = category.toLowerCase();
-
-  if (cat.includes("single")) {
-    return {
-      eyebrow: "Single Cocoon Silhouettes",
-      title: "Solitary Reading Sanctuaries & Single Egg Swings",
-      description:
-        "Ergonomically contoured hanging nest chairs hand-strung with high-density UV polyethylene wicker. Engineered for apartment balconies, cozy veranda corners, and tranquil garden reading nooks up to 350 lbs.",
-    };
-  }
-
-  if (cat.includes("double")) {
-    return {
-      eyebrow: "Two-Person Veranda Cocoons",
-      title: "Double Loveseat Swings & Twilight Loungers",
-      description:
-        "Generously proportioned two-person cocoons featuring dual suspension points, marine alloy frames, and deep all-weather Olefin cushions. Designed for shared evenings up to 550 lbs.",
-    };
-  }
-
-  if (cat.includes("swing-bed") || cat.includes("bed") || cat.includes("daybed") || cat.includes("three")) {
-    return {
-      eyebrow: "Architectural Teak Sanctuary Beds",
-      title: "Three-Seater Swings & Solid Teak Daybeds",
-      description:
-        "Full 78-inch daybed porch swings handcrafted from Indonesian FSC-certified Grade-A teak with traditional mortise-and-tenon joinery. Includes four-point marine rigging hardware rated to 800 lbs.",
-    };
-  }
-
-  if (cat.includes("accessories") || cat.includes("stands")) {
-    return {
-      eyebrow: "Structural Rigging & Essentials",
-      title: "Heavy-Duty Stands, Silencer Springs & Hardware",
-      description:
-        "Rust-inhibited powder-coated structural steel cantilever stands, silicone-damped zero-squeak springs, nautical ropes, and tailored all-weather protective covers.",
-    };
-  }
-
-  return {
-    eyebrow: activeRow?.nick_name || "Curated Sanctuary Collection",
-    title: activeRow?.name ? `${activeRow.name} Collection` : "Fine-Crafted Outdoor Swings & Porch Daybeds",
-    description:
-      activeRow?.nick_name ||
-      "Fine crafted outdoor nests engineered with marine-grade hardware, hand-woven UV resin fibers, and kiln-dried FSC teak for years of unhurried mornings.",
-  };
-}
+const HERO_EDITORIAL = {
+  eyebrow: "Curated Sanctuary Collection",
+  title: "Fine-Crafted Outdoor Swings & Porch Daybeds",
+  description:
+    "Fine crafted outdoor nests engineered with marine-grade hardware, hand-woven UV resin fibers, and kiln-dried FSC teak for years of unhurried mornings.",
+};
 
 export function ProductsHero({
   activeCategory,
   categories,
   totalModels = 28,
 }: ProductsHeroProps) {
-  const activeRow = categories?.find(
-    (c) =>
-      c.slug === activeCategory ||
-      (activeCategory && c.slug && activeCategory.includes(c.slug)) ||
-      String(c.id) === activeCategory,
-  );
-
-  const editorial = getCategoryEditorial(activeCategory, activeRow);
 
   const filterTabs = [
     { label: "All Swings", href: "/collections", value: "all" },
@@ -111,7 +56,7 @@ export function ProductsHero({
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-block w-6 h-[1.5px] bg-primary" />
               <span className="font-sans text-[11px] uppercase tracking-widest text-primary font-bold">
-                {editorial.eyebrow}
+                {HERO_EDITORIAL.eyebrow}
               </span>
             </div>
 
@@ -120,12 +65,12 @@ export function ProductsHero({
               id="collection-hero-heading"
               className="font-serif text-3xl sm:text-4xl lg:text-[42px] text-espresso-rich font-semibold tracking-tight leading-tight"
             >
-              {editorial.title}
+              {HERO_EDITORIAL.title}
             </h1>
 
             {/* Subtitle Description */}
             <p className="font-sans text-sm sm:text-base text-on-surface-variant mt-2 max-w-xl leading-relaxed">
-              {editorial.description}
+              {HERO_EDITORIAL.description}
             </p>
           </div>
 

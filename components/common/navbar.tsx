@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, ShoppingBag, Menu, X, CircleUserRound } from "lucide-react";
+import { Search, ShoppingBag, Menu, X, CircleUserRound, LogOut, User as UserIcon } from "lucide-react";
 import { useCart } from "@/context/cart-context";
+import { useAuth } from "@/context/auth-context";
 
 interface NavbarProps {
   cartCount?: number;
@@ -20,11 +21,28 @@ export function Navbar({
   showSearch,
 }: NavbarProps) {
   const { cartCount: liveCartCount, openCart } = useCart();
+  const { user, displayName, avatarUrl, openAuthModal, signOut } = useAuth();
   const cartCount = propCartCount !== undefined ? propCartCount : liveCartCount;
   const onCartClick = propOnCartClick || openCart;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,9 +129,92 @@ export function Navbar({
               )}
             </button>
 
-            {/* User Profile Avatar */}
-            <div className="w-8 h-8 rounded-full  flex items-center justify-center font-medium text-xs text-espresso-rich">
-              <CircleUserRound className="w-5 h-5 text-espresso-rich" />
+            {/* User Profile / Sign In */}
+            <div className="relative" ref={userMenuRef}>
+              {user ? (
+                <button
+                  type="button"
+                  onClick={() => setUserMenuOpen((prev) => !prev)}
+                  aria-label="User Account Menu"
+                  aria-expanded={userMenuOpen}
+                  className="w-8 h-8 rounded-full overflow-hidden border border-border-subtle hover:ring-2 hover:ring-primary-container/40 transition-all flex items-center justify-center bg-surface-cream text-espresso-rich cursor-pointer"
+                >
+                  {avatarUrl ? (
+                    <Image
+                      src={avatarUrl}
+                      alt={displayName}
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                      unoptimized
+                    />
+                  ) : (
+                    <span className="text-xs font-bold text-espresso-rich uppercase">
+                      {displayName.charAt(0) || "U"}
+                    </span>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() =>
+                    openAuthModal({
+                      title: "Sign In to Westernswings",
+                      description:
+                        "Sign in with Google to view your orders, reviews, and saved addresses.",
+                    })
+                  }
+                  aria-label="Sign In with Google"
+                  className="flex items-center gap-1.5 py-1.5 px-3 rounded-full border border-border-subtle hover:bg-surface-cream text-espresso-rich text-xs font-semibold transition-all cursor-pointer shadow-xs"
+                >
+                  <CircleUserRound className="w-4 h-4 text-espresso-rich" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </button>
+              )}
+
+              {/* User Dropdown Menu */}
+              {userMenuOpen && user && (
+                <div className="absolute right-0 mt-2 w-64 bg-surface-card rounded-2xl border border-border-subtle shadow-xl p-3 z-50 space-y-2 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-3 py-2 border-b border-border-subtle/80 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-surface-cream border border-border-subtle shrink-0 flex items-center justify-center">
+                      {avatarUrl ? (
+                        <Image
+                          src={avatarUrl}
+                          alt={displayName}
+                          width={36}
+                          height={36}
+                          className="w-full h-full object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <UserIcon className="w-5 h-5 text-espresso-rich" />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-espresso-rich truncate">
+                        {displayName}
+                      </p>
+                      <p className="text-[11px] text-neutral-mineral truncate">
+                        {user.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setUserMenuOpen(false);
+                        await signOut();
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50/80 rounded-xl transition-colors cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -124,6 +225,71 @@ export function Navbar({
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-border-subtle bg-surface-card px-4 pt-3 pb-6 space-y-4 shadow-xl animate-fadeIn">
+          {/* Mobile User Status */}
+          <div className="p-3 bg-surface-cream/60 rounded-xl border border-border-subtle/80 flex items-center justify-between">
+            {user ? (
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-card border border-border-subtle shrink-0 flex items-center justify-center">
+                  {avatarUrl ? (
+                    <Image
+                      src={avatarUrl}
+                      alt={displayName}
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                      unoptimized
+                    />
+                  ) : (
+                    <span className="text-xs font-bold text-espresso-rich uppercase">
+                      {displayName.charAt(0) || "U"}
+                    </span>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-espresso-rich truncate">
+                    {displayName}
+                  </p>
+                  <p className="text-[10px] text-neutral-mineral truncate">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-xs text-neutral-mineral">
+                <CircleUserRound className="w-5 h-5 text-espresso-rich" />
+                <span>Guest</span>
+              </div>
+            )}
+
+            {user ? (
+              <button
+                type="button"
+                onClick={async () => {
+                  setMobileMenuOpen(false);
+                  await signOut();
+                }}
+                className="text-xs font-semibold text-red-600 hover:text-red-700 px-2 py-1 rounded-md cursor-pointer"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openAuthModal({
+                    title: "Sign In to Westernswings",
+                    description:
+                      "Sign in with Google to view your orders, reviews, and saved addresses.",
+                  });
+                }}
+                className="text-xs font-semibold bg-primary-container hover:bg-moss-deep text-surface-card px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+
           {/* Mobile Search */}
           <div className="relative w-full">
             <Search className="w-4 h-4 text-neutral-mineral absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
