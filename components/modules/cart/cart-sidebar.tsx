@@ -79,7 +79,7 @@ export function CartSidebar() {
           <div className="flex items-center gap-2.5">
             <ShoppingBag className="w-5 h-5 text-primary-container" />
             <h2 className="font-serif text-lg sm:text-xl font-semibold text-espresso-rich">
-              Your Sanctuary Cart
+              Your Cart
             </h2>
             {cartCount > 0 && (
               <span className="px-2 py-0.5 rounded-full bg-primary-container/10 text-primary-container text-xs font-bold">
@@ -120,7 +120,7 @@ export function CartSidebar() {
                   Your cart is currently empty
                 </h3>
                 <p className="text-xs text-neutral-mineral max-w-xs mx-auto leading-relaxed">
-                  Discover handcrafted swings made with kiln-dried teak & weather-resilient wicker.
+                  Discover finecrafted swings made with kiln-dried teak & weather-resilient wicker.
                 </p>
               </div>
               <div className="pt-2">
@@ -233,10 +233,6 @@ export function CartSidebar() {
                   <span>-₹{savings.toLocaleString("en-IN")}</span>
                 </div>
               )}
-              <div className="flex justify-between items-center text-neutral-mineral">
-                <span>Pan-India Delivery</span>
-                <span className="text-primary-container font-semibold uppercase text-[11px]">Free</span>
-              </div>
               <div className="flex justify-between items-baseline pt-2 border-t border-border-subtle/80 font-serif text-base sm:text-lg font-semibold text-espresso-rich">
                 <span>Subtotal</span>
                 <span>₹{subtotal.toLocaleString("en-IN")}</span>
@@ -261,7 +257,7 @@ export function CartSidebar() {
             <div className="pt-2 flex items-center justify-around text-[10px] text-neutral-mineral border-t border-border-subtle/60">
               <span className="inline-flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3 text-primary-container" />
-                10-Year Warranty
+                1-Year Warranty
               </span>
               <span className="inline-flex items-center gap-1">
                 <Truck className="w-3 h-3 text-primary-container" />
