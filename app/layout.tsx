@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { playfair, plusJakarta } from "@/lib/fonts";
 import "./globals.css";
 
@@ -7,6 +8,7 @@ import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
 import { CartSidebar } from "@/components/modules/cart";
 import { AuthModal } from "@/components/auth/auth-modal";
+import { CheckoutModal } from "@/components/modules/checkout";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -34,8 +36,13 @@ export default function RootLayout({
             {children}
             <CartSidebar />
             <AuthModal />
+            <CheckoutModal />
           </CartProvider>
         </AuthProvider>
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

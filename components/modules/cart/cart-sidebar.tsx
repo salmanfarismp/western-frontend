@@ -28,6 +28,7 @@ export function CartSidebar() {
     isUpdating,
     isSidebarOpen,
     closeCart,
+    openCheckout,
     updateQuantity,
     removeItem,
   } = useCart();
@@ -252,10 +253,13 @@ export function CartSidebar() {
                     title: "Sign In to Checkout",
                     description:
                       "Sign in with Google to complete your purchase, save delivery preferences, and track shipments.",
+                    onSuccess: () => {
+                      openCheckout();
+                    },
                   });
                   return;
                 }
-                alert("Proceeding to checkout with " + cartCount + " item(s).");
+                openCheckout();
               }}
               className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-primary-container hover:bg-moss-deep text-surface-card text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-sm cursor-pointer"
             >

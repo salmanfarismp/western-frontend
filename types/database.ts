@@ -131,3 +131,71 @@ export interface CartItemJoined extends CartItemRow {
   Product?: ProductJoined | null;
 }
 
+export type OrderStatus = "new" | "processing" | "completed" | "cancelled" | string;
+export type FulfillmentStatus = "active" | "fulfilled" | "cancelled" | string;
+export type PaymentStatus = "captured" | "completed" | "pending" | "failed" | string;
+
+export interface PaymentRow {
+  id: string; // uuid
+  created_at: string;
+  gateway: string | null;
+  gateway_payment_id: string | null;
+  gateway_order_id: string | null;
+  gateway_signature: string | null;
+  amount: string | null;
+  status: PaymentStatus | null;
+  raw_response: Record<string, unknown> | null;
+  updated_at: string | null;
+}
+
+export interface ShippingRow {
+  id: number;
+  created_at: string;
+  address_line1: string | null;
+  address_line2: string | null;
+  city: string | null;
+  state: string | null;
+  postal_code: string | null;
+  country: string | null;
+  contact_phone: string | null;
+}
+
+export interface OrderRow {
+  id: number;
+  created_at: string;
+  payment: string | null; // uuid fk -> Payment.id
+  status: OrderStatus | null;
+  fulfillment: FulfillmentStatus | null;
+  shipping: number | null; // bigint fk -> Shipping.id
+  total_amount: string | null;
+  profile_id: string | null; // uuid fk -> Profile.id
+}
+
+export interface OrderItemRow {
+  id: number;
+  created_at: string;
+  product: string | null; // uuid
+  quantity: number | null;
+  order_id: number | null; // bigint fk -> Order.id
+  order?: number | null; // legacy alias
+  product_title_snapshot: string | null;
+  unit_price_snapshot: string | null;
+  total_price: number | null;
+}
+
+export interface ProfileRow {
+  id: string; // uuid fk -> auth.users.id
+  created_at: string;
+  name: string | null;
+  phone: string | null;
+  email: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  city: string | null;
+  state: string | null;
+  postal_code: string | null;
+  country: string | null;
+  contact_phone: string | null;
+  avatar_url: string | null;
+}
+

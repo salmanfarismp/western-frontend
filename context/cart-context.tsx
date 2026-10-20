@@ -20,6 +20,7 @@ import { getDeviceId } from "@/lib/utils/device-id";
 import { useAuth } from "@/context/auth-context";
 
 interface CartContextValue {
+  cartId: number | null;
   items: FormattedCartItem[];
   cartCount: number;
   subtotal: number;
@@ -28,9 +29,12 @@ interface CartContextValue {
   isLoading: boolean;
   isUpdating: boolean;
   isSidebarOpen: boolean;
+  isCheckoutOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
+  openCheckout: () => void;
+  closeCheckout: () => void;
   addToCart: (productId: string, quantity?: number) => Promise<boolean>;
   updateQuantity: (cartItemId: number, quantity: number) => Promise<void>;
   removeItem: (cartItemId: number) => Promise<void>;
@@ -56,6 +60,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
   const [, startTransition] = useTransition();
 
   // Fetch or migrate existing cart on mount and when authentication state changes
@@ -89,6 +94,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const openCart = useCallback(() => setIsSidebarOpen(true), []);
   const closeCart = useCallback(() => setIsSidebarOpen(false), []);
   const toggleCart = useCallback(() => setIsSidebarOpen((prev) => !prev), []);
+
+  const openCheckout = useCallback(() => setIsCheckoutOpen(true), []);
+  const closeCheckout = useCallback(() => setIsCheckoutOpen(false), []);
 
   const refreshCart = useCallback(async () => {
     const id = deviceId || getDeviceId();
@@ -184,6 +192,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   return (
     <CartContext.Provider
       value={{
+        cartId: cartData.cart?.id || null,
         items: cartData.items,
         cartCount: cartData.cartCount,
         subtotal: cartData.subtotal,
@@ -192,9 +201,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         isUpdating,
         isSidebarOpen,
+        isCheckoutOpen,
         openCart,
         closeCart,
         toggleCart,
+        openCheckout,
+        closeCheckout,
         addToCart,
         updateQuantity,
         removeItem,
