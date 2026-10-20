@@ -147,20 +147,7 @@ export function Navbar({
                 aria-label="User Account"
                 className="relative p-2.5 text-espresso-rich hover:bg-surface-cream rounded-full transition-colors cursor-pointer flex items-center justify-center"
               >
-                {user && avatarUrl ? (
-                  <div className="w-5 h-5 rounded-full overflow-hidden border border-border-subtle">
-                    <Image
-                      src={avatarUrl}
-                      alt={displayName}
-                      width={20}
-                      height={20}
-                      className="w-full h-full object-cover"
-                      unoptimized
-                    />
-                  </div>
-                ) : (
-                  <CircleUserRound className="w-5 h-5 text-espresso-rich" />
-                )}
+                <CircleUserRound className="w-5 h-5 text-espresso-rich" />
               </button>
 
               {/* User Dropdown Menu */}
