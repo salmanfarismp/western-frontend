@@ -3,7 +3,7 @@ import type { ProductJoined, BadgeRow } from "@/types/database";
 import type { Product } from "@/types/home";
 import type { ProductDetailData } from "@/lib/data/product-detail-data";
 import { mapProductJoinedToProduct, mapProductJoinedToDetail } from "./mappers";
-import { getCategoryBySlug } from "./categories";
+import { getCategoryBySlug, getCategories } from "./categories";
 import { getProductReviews } from "./reviews";
 
 let cachedBadges: Map<number, BadgeRow> | null = null;
@@ -23,6 +23,7 @@ export interface GetProductsParams {
   categorySlug?: string;
   categoryId?: number;
   limit?: number;
+  search?: string;
 }
 
 export async function getProducts(params?: GetProductsParams): Promise<Product[]> {
@@ -43,6 +44,31 @@ export async function getProducts(params?: GetProductsParams): Promise<Product[]
     const category = await getCategoryBySlug(params.categorySlug);
     if (category) {
       query = query.eq("category", category.id);
+    }
+  }
+
+  if (params?.search) {
+    const cleanedSearch = params.search.replace(/[,()%.]/g, " ").trim();
+    if (cleanedSearch) {
+      const allCategories = await getCategories();
+      const lowerSearch = cleanedSearch.toLowerCase();
+      const matchingCategoryIds = allCategories
+        .filter((c) =>
+          (c.name && c.name.toLowerCase().includes(lowerSearch)) ||
+          (c.nick_name && c.nick_name.toLowerCase().includes(lowerSearch)) ||
+          (c.slug && c.slug.toLowerCase().includes(lowerSearch))
+        )
+        .map((c) => c.id);
+
+      if (matchingCategoryIds.length > 0) {
+        query = query.or(
+          `name.ilike.%${cleanedSearch}%,subtitle.ilike.%${cleanedSearch}%,category.in.(${matchingCategoryIds.join(",")})`
+        );
+      } else {
+        query = query.or(
+          `name.ilike.%${cleanedSearch}%,subtitle.ilike.%${cleanedSearch}%`
+        );
+      }
     }
   }
 

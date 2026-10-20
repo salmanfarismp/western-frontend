@@ -10,9 +10,10 @@ import { useCart } from "@/context/cart-context";
 interface ProductsGridProps {
   products: Product[];
   onAddToCart?: (product: Product) => void;
+  searchQuery?: string;
 }
 
-export function ProductsGrid({ products, onAddToCart }: ProductsGridProps) {
+export function ProductsGrid({ products, onAddToCart, searchQuery }: ProductsGridProps) {
   const { addToCart } = useCart();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -37,19 +38,57 @@ export function ProductsGrid({ products, onAddToCart }: ProductsGridProps) {
       >
         <div className="max-w-md mx-auto space-y-4">
           <p className="font-serif text-2xl text-espresso-rich font-semibold">
-            No Handcrafted Models Found
+            {searchQuery
+              ? `No Swings Found for "${searchQuery}"`
+              : "No Handcrafted Models Found"}
           </p>
           <p className="font-sans text-sm text-neutral-mineral leading-relaxed">
-            We couldn&apos;t find any pieces in this specific silhouette right now. Explore our complete architectural collection.
+            {searchQuery
+              ? "We couldn't find any swings matching your search. Try checking your spelling, using broader terms, or explore our popular categories below."
+              : "We couldn't find any pieces in this specific silhouette right now. Explore our complete architectural collection."}
           </p>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-2.5">
             <Link
               href="/collections"
               className="inline-flex items-center px-5 py-2.5 rounded-full bg-primary-container text-surface-card hover:bg-moss-deep text-xs font-semibold transition-all shadow-sm"
             >
-              View All Swings
+              {searchQuery ? "Clear Search & View All" : "View All Swings"}
             </Link>
           </div>
+
+          {searchQuery && (
+            <div className="pt-4 border-t border-border-subtle/60 mt-6">
+              <p className="text-[11px] font-semibold text-neutral-mineral uppercase tracking-wider mb-3">
+                Or explore popular categories
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Link
+                  href="/collections?category=single-swing-chair"
+                  className="px-3.5 py-1.5 rounded-full bg-surface-cream text-espresso-rich text-xs font-medium hover:bg-surface-cream/80 border border-border-subtle transition-colors"
+                >
+                  Single Swings
+                </Link>
+                <Link
+                  href="/collections?category=double-swing-chair"
+                  className="px-3.5 py-1.5 rounded-full bg-surface-cream text-espresso-rich text-xs font-medium hover:bg-surface-cream/80 border border-border-subtle transition-colors"
+                >
+                  Double Swings
+                </Link>
+                <Link
+                  href="/collections?category=swing-bed"
+                  className="px-3.5 py-1.5 rounded-full bg-surface-cream text-espresso-rich text-xs font-medium hover:bg-surface-cream/80 border border-border-subtle transition-colors"
+                >
+                  Three Seater Swings
+                </Link>
+                <Link
+                  href="/collections?category=swing-chair-accessories"
+                  className="px-3.5 py-1.5 rounded-full bg-surface-cream text-espresso-rich text-xs font-medium hover:bg-surface-cream/80 border border-border-subtle transition-colors"
+                >
+                  Accessories
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     );

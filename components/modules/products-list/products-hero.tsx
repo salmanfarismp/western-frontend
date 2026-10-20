@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Search, X } from "lucide-react";
 import type { ProductCategory } from "@/types/home";
 import type { ProductCategoryRow } from "@/types/database";
 
@@ -8,6 +8,7 @@ interface ProductsHeroProps {
   activeCategory: ProductCategory;
   categories?: ProductCategoryRow[];
   totalModels?: number;
+  searchQuery?: string;
 }
 
 const HERO_EDITORIAL = {
@@ -21,21 +22,33 @@ export function ProductsHero({
   activeCategory,
   categories,
   totalModels = 28,
+  searchQuery,
 }: ProductsHeroProps) {
+  const getTabHref = (slugOrId: string) => {
+    const params = new URLSearchParams();
+    if (slugOrId !== "all") {
+      params.set("category", slugOrId);
+    }
+    if (searchQuery) {
+      params.set("search", searchQuery);
+    }
+    const queryString = params.toString();
+    return queryString ? `/collections?${queryString}` : "/collections";
+  };
 
   const filterTabs = [
-    { label: "All Swings", href: "/collections", value: "all" },
+    { label: "All Swings", href: getTabHref("all"), value: "all" },
     ...(categories && categories.length > 0
       ? categories.map((c) => ({
           label: c.nick_name || c.name || "Category",
-          href: `/collections?category=${c.slug || c.id}`,
+          href: getTabHref(c.slug || String(c.id)),
           value: (c.slug || String(c.id)) as ProductCategory,
         }))
       : [
-          { label: "Single Swings", href: "/collections?category=single-swing-chair", value: "single-swing-chair" as ProductCategory },
-          { label: "Double Swings", href: "/collections?category=double-swing-chair", value: "double-swing-chair" as ProductCategory },
-          { label: "Three Seater Swings", href: "/collections?category=swing-bed", value: "swing-bed" as ProductCategory },
-          { label: "Accessories", href: "/collections?category=swing-chair-accessories", value: "swing-chair-accessories" as ProductCategory },
+          { label: "Single Swings", href: getTabHref("single-swing-chair"), value: "single-swing-chair" as ProductCategory },
+          { label: "Double Swings", href: getTabHref("double-swing-chair"), value: "double-swing-chair" as ProductCategory },
+          { label: "Three Seater Swings", href: getTabHref("swing-bed"), value: "swing-bed" as ProductCategory },
+          { label: "Accessories", href: getTabHref("swing-chair-accessories"), value: "swing-chair-accessories" as ProductCategory },
         ]),
   ];
 
@@ -94,10 +107,28 @@ export function ProductsHero({
           </div>
         </div>
 
+        {/* Active Search Filter Banner */}
+        {searchQuery && (
+          <div className="mt-4 sm:mt-5 inline-flex items-center gap-2 px-3.5 py-1.5 bg-surface-card/90 border border-border-subtle rounded-full text-xs shadow-xs">
+            <Search className="w-3.5 h-3.5 text-primary-container shrink-0" />
+            <span className="text-espresso-rich">
+              Showing results for <strong className="font-semibold text-espresso-rich">&ldquo;{searchQuery}&rdquo;</strong>
+            </span>
+            <Link
+              href={activeCategory !== "all" ? `/collections?category=${activeCategory}` : "/collections"}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-neutral-mineral hover:text-red-600 ml-1 pl-2 border-l border-border-subtle transition-colors"
+              title="Clear search query"
+            >
+              <X className="w-3 h-3" />
+              <span>Clear</span>
+            </Link>
+          </div>
+        )}
+
         {/* Crawlable Semantic Category Filter Navigation */}
         <nav
           aria-label="Category Navigation"
-          className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-2 mt-5 sm:mt-7 scrollbar-none whitespace-nowrap"
+          className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-2 mt-4 sm:mt-6 scrollbar-none whitespace-nowrap"
         >
           {filterTabs.map((filter) => {
             const isActive =

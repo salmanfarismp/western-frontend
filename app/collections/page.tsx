@@ -30,6 +30,10 @@ export async function generateMetadata({
   const resolvedParams = await searchParams;
   const categoryParam =
     typeof resolvedParams.category === "string" ? resolvedParams.category : "all";
+  const searchParam =
+    typeof resolvedParams.search === "string" && resolvedParams.search.trim()
+      ? resolvedParams.search.trim()
+      : undefined;
 
   const categoryRow =
     categoryParam !== "all" ? await getCategoryBySlug(categoryParam) : null;
@@ -43,13 +47,16 @@ export async function generateMetadata({
           .replace(/\b\w/g, (c) => c.toUpperCase())
       : "All Swings");
 
-  const title = isFiltered
+  const title = searchParam
+    ? `"${searchParam}" Outdoor Swings | Search Results`
+    : isFiltered
     ? `${categoryName} | Luxury Outdoor Swings Collection`
     : "All Outdoor Swings & Patio Daybeds | Handcrafted Collection";
 
-  const description =
-    categoryRow?.nick_name ||
-    "Explore our complete range of handcrafted outdoor egg chairs, two-person loveseats, and solid teak porch daybeds engineered for slow, tranquil living.";
+  const description = searchParam
+    ? `Discover handcrafted outdoor porch swings and luxury garden nests matching "${searchParam}" at Westernswings.`
+    : categoryRow?.nick_name ||
+      "Explore our complete range of handcrafted outdoor egg chairs, two-person loveseats, and solid teak porch daybeds engineered for slow, tranquil living.";
 
   const canonicalUrl = isFiltered
     ? `${siteConfig.url}/collections?category=${encodeURIComponent(categoryParam)}`
@@ -84,10 +91,10 @@ export async function generateMetadata({
       images: [categoryRow?.img_url || siteConfig.ogImage],
     },
     robots: {
-      index: true,
+      index: !searchParam,
       follow: true,
       googleBot: {
-        index: true,
+        index: !searchParam,
         follow: true,
         "max-image-preview": "large",
       },
@@ -103,12 +110,17 @@ export default async function CollectionsPage({
     (typeof resolvedParams.category === "string"
       ? resolvedParams.category
       : "all") as ProductCategory;
+  const searchParam =
+    typeof resolvedParams.search === "string" && resolvedParams.search.trim()
+      ? resolvedParams.search.trim()
+      : undefined;
 
   const [categories, categoryRow, products, faqs] = await Promise.all([
     getCategories(),
     categoryParam !== "all" ? getCategoryBySlug(categoryParam) : null,
     getProducts({
       categorySlug: categoryParam === "all" ? undefined : categoryParam,
+      search: searchParam,
     }),
     getFaqs(),
   ]);
@@ -134,7 +146,7 @@ export default async function CollectionsPage({
       <AnnouncementBar />
 
       {/* Main Navigation Header (Client Island) */}
-      <Navbar showSearch={false} />
+      <Navbar showSearch={true} />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full">
@@ -143,10 +155,11 @@ export default async function CollectionsPage({
           activeCategory={categoryParam}
           categories={categories}
           totalModels={products.length}
+          searchQuery={searchParam}
         />
 
         {/* Product Grid (Pre-rendered on Server, Instant HTML) */}
-        <ProductsGrid products={products} />
+        <ProductsGrid products={products} searchQuery={searchParam} />
 
         {/* Sizing, Mounting & Care Guide FAQ (SSR Semantic Q&A for AEO) */}
         <CollectionsFaqSection faqs={faqs} />
