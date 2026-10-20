@@ -116,7 +116,7 @@ export interface CartRow {
   id: number;
   created_at: string;
   device_id: string | null;
-  profile: number | null;
+  profile_id: string | null;
 }
 
 export interface CartItemRow {

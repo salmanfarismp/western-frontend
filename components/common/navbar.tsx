@@ -129,48 +129,39 @@ export function Navbar({
               )}
             </button>
 
-            {/* User Profile / Sign In */}
+            {/* User Profile */}
             <div className="relative" ref={userMenuRef}>
-              {user ? (
-                <button
-                  type="button"
-                  onClick={() => setUserMenuOpen((prev) => !prev)}
-                  aria-label="User Account Menu"
-                  aria-expanded={userMenuOpen}
-                  className="w-8 h-8 rounded-full overflow-hidden border border-border-subtle hover:ring-2 hover:ring-primary-container/40 transition-all flex items-center justify-center bg-surface-cream text-espresso-rich cursor-pointer"
-                >
-                  {avatarUrl ? (
-                    <Image
-                      src={avatarUrl}
-                      alt={displayName}
-                      width={32}
-                      height={32}
-                      className="w-full h-full object-cover"
-                      unoptimized
-                    />
-                  ) : (
-                    <span className="text-xs font-bold text-espresso-rich uppercase">
-                      {displayName.charAt(0) || "U"}
-                    </span>
-                  )}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() =>
+              <button
+                type="button"
+                onClick={() => {
+                  if (user) {
+                    setUserMenuOpen((prev) => !prev);
+                  } else {
                     openAuthModal({
                       title: "Sign In to Westernswings",
                       description:
-                        "Sign in with Google to view your orders, reviews, and saved addresses.",
-                    })
+                        "Sign in to view your orders!",
+                    });
                   }
-                  aria-label="Sign In with Google"
-                  className="flex items-center gap-1.5 py-1.5 px-3 rounded-full border border-border-subtle hover:bg-surface-cream text-espresso-rich text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                >
-                  <CircleUserRound className="w-4 h-4 text-espresso-rich" />
-                  <span className="hidden sm:inline">Sign In</span>
-                </button>
-              )}
+                }}
+                aria-label="User Account"
+                className="relative p-2.5 text-espresso-rich hover:bg-surface-cream rounded-full transition-colors cursor-pointer flex items-center justify-center"
+              >
+                {user && avatarUrl ? (
+                  <div className="w-5 h-5 rounded-full overflow-hidden border border-border-subtle">
+                    <Image
+                      src={avatarUrl}
+                      alt={displayName}
+                      width={20}
+                      height={20}
+                      className="w-full h-full object-cover"
+                      unoptimized
+                    />
+                  </div>
+                ) : (
+                  <CircleUserRound className="w-5 h-5 text-espresso-rich" />
+                )}
+              </button>
 
               {/* User Dropdown Menu */}
               {userMenuOpen && user && (
@@ -225,9 +216,9 @@ export function Navbar({
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-border-subtle bg-surface-card px-4 pt-3 pb-6 space-y-4 shadow-xl animate-fadeIn">
-          {/* Mobile User Status */}
-          <div className="p-3 bg-surface-cream/60 rounded-xl border border-border-subtle/80 flex items-center justify-between">
-            {user ? (
+          {/* Mobile User Status (only displayed if logged in) */}
+          {user && (
+            <div className="p-3 bg-surface-cream/60 rounded-xl border border-border-subtle/80 flex items-center justify-between">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-card border border-border-subtle shrink-0 flex items-center justify-center">
                   {avatarUrl ? (
@@ -240,9 +231,7 @@ export function Navbar({
                       unoptimized
                     />
                   ) : (
-                    <span className="text-xs font-bold text-espresso-rich uppercase">
-                      {displayName.charAt(0) || "U"}
-                    </span>
+                    <CircleUserRound className="w-5 h-5 text-espresso-rich" />
                   )}
                 </div>
                 <div className="min-w-0">
@@ -254,14 +243,6 @@ export function Navbar({
                   </p>
                 </div>
               </div>
-            ) : (
-              <div className="flex items-center gap-2 text-xs text-neutral-mineral">
-                <CircleUserRound className="w-5 h-5 text-espresso-rich" />
-                <span>Guest</span>
-              </div>
-            )}
-
-            {user ? (
               <button
                 type="button"
                 onClick={async () => {
@@ -272,23 +253,8 @@ export function Navbar({
               >
                 Sign Out
               </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openAuthModal({
-                    title: "Sign In to Westernswings",
-                    description:
-                      "Sign in with Google to view your orders, reviews, and saved addresses.",
-                  });
-                }}
-                className="text-xs font-semibold bg-primary-container hover:bg-moss-deep text-surface-card px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-              >
-                Sign In
-              </button>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Mobile Search */}
           <div className="relative w-full">

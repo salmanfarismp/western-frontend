@@ -17,6 +17,7 @@ import {
   clearCart as clearCartApi,
 } from "@/lib/api/cart";
 import { getDeviceId } from "@/lib/utils/device-id";
+import { useAuth } from "@/context/auth-context";
 
 interface CartContextValue {
   items: FormattedCartItem[];
@@ -40,6 +41,9 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const profileId = user?.id || null;
+
   const [cartData, setCartData] = useState<CartData>({
     cart: null,
     items: [],
@@ -49,25 +53,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     savings: 0,
   });
   const [deviceId] = useState<string>(() => (typeof window !== "undefined" ? getDeviceId() : ""));
-  const [isLoading, setIsLoading] = useState<boolean>(() => Boolean(typeof window !== "undefined" && getDeviceId()));
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [, startTransition] = useTransition();
 
-  // Fetch existing cart on mount
+  // Fetch or migrate existing cart on mount and when authentication state changes
   useEffect(() => {
     let isCancelled = false;
     const id = deviceId || getDeviceId();
 
-    if (id) {
-      fetchCartWithItems(id)
+    if (id || profileId) {
+      setIsLoading(true);
+      fetchCartWithItems(id, profileId)
         .then((data) => {
           if (!isCancelled) {
             setCartData(data);
           }
         })
         .catch((err) => {
-          console.error("Failed to load initial cart:", err);
+          console.error("Failed to load cart:", err);
         })
         .finally(() => {
           if (!isCancelled) {
@@ -79,7 +84,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return () => {
       isCancelled = true;
     };
-  }, [deviceId]);
+  }, [deviceId, profileId]);
 
   const openCart = useCallback(() => setIsSidebarOpen(true), []);
   const closeCart = useCallback(() => setIsSidebarOpen(false), []);
@@ -87,23 +92,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const refreshCart = useCallback(async () => {
     const id = deviceId || getDeviceId();
-    if (!id) return;
+    if (!id && !profileId) return;
     try {
-      const data = await fetchCartWithItems(id);
+      const data = await fetchCartWithItems(id, profileId);
       setCartData(data);
     } catch (err) {
       console.error("Error refreshing cart:", err);
     }
-  }, [deviceId]);
+  }, [deviceId, profileId]);
 
   const addToCart = useCallback(
     async (productId: string, quantity: number = 1): Promise<boolean> => {
       const id = deviceId || getDeviceId();
-      if (!id || !productId) return false;
+      if ((!id && !profileId) || !productId) return false;
 
       setIsUpdating(true);
       try {
-        const updated = await addItemToCart(id, productId, quantity);
+        const updated = await addItemToCart(id, productId, quantity, profileId);
         startTransition(() => {
           setCartData(updated);
           setIsSidebarOpen(true);
@@ -116,17 +121,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setIsUpdating(false);
       }
     },
-    [deviceId]
+    [deviceId, profileId]
   );
 
   const updateQuantity = useCallback(
     async (cartItemId: number, quantity: number) => {
       const id = deviceId || getDeviceId();
-      if (!id) return;
+      if (!id && !profileId) return;
 
       setIsUpdating(true);
       try {
-        const updated = await updateCartItemQty(id, cartItemId, quantity);
+        const updated = await updateCartItemQty(id, cartItemId, quantity, profileId);
         startTransition(() => {
           setCartData(updated);
         });
@@ -136,17 +141,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setIsUpdating(false);
       }
     },
-    [deviceId]
+    [deviceId, profileId]
   );
 
   const removeItem = useCallback(
     async (cartItemId: number) => {
       const id = deviceId || getDeviceId();
-      if (!id) return;
+      if (!id && !profileId) return;
 
       setIsUpdating(true);
       try {
-        const updated = await removeCartItem(id, cartItemId);
+        const updated = await removeCartItem(id, cartItemId, profileId);
         startTransition(() => {
           setCartData(updated);
         });
@@ -156,16 +161,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setIsUpdating(false);
       }
     },
-    [deviceId]
+    [deviceId, profileId]
   );
 
   const clearCart = useCallback(async () => {
     const id = deviceId || getDeviceId();
-    if (!id) return;
+    if (!id && !profileId) return;
 
     setIsUpdating(true);
     try {
-      const updated = await clearCartApi(id);
+      const updated = await clearCartApi(id, profileId);
       startTransition(() => {
         setCartData(updated);
       });
@@ -174,7 +179,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsUpdating(false);
     }
-  }, [deviceId]);
+  }, [deviceId, profileId]);
 
   return (
     <CartContext.Provider

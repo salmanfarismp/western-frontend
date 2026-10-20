@@ -65,48 +65,158 @@ function computeSummary(cart: CartRow | null, items: FormattedCartItem[]): CartD
   };
 }
 
-export async function getOrCreateCart(deviceId: string): Promise<CartRow | null> {
-  if (!deviceId) return null;
+export async function getOrCreateCart(
+  deviceId: string,
+  profileId?: string | null
+): Promise<CartRow | null> {
+  if (!deviceId && !profileId) return null;
 
   try {
-    // 1. Try to find existing active cart for this device
-    const { data, error } = await supabase
+    // 1. If user is authenticated (profileId provided):
+    if (profileId) {
+      // Find existing active cart for this profile
+      const { data: userCart, error: userCartErr } = await supabase
+        .from("Cart")
+        .select("*")
+        .eq("profile_id", profileId)
+        .order("id", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (userCartErr) {
+        console.error("Error fetching user cart:", userCartErr);
+      }
+
+      // Check if there is an unattached guest cart for this device
+      let guestCart: CartRow | null = null;
+      if (deviceId) {
+        const { data: gCart } = await supabase
+          .from("Cart")
+          .select("*")
+          .eq("device_id", deviceId)
+          .is("profile_id", null)
+          .order("id", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        guestCart = gCart as CartRow | null;
+      }
+
+      if (userCart) {
+        // If there was also a guest cart with items, migrate them into the user cart
+        if (guestCart && guestCart.id !== userCart.id) {
+          const { data: guestItems } = await supabase
+            .from("CartItem")
+            .select("*")
+            .eq("cart", guestCart.id);
+
+          if (guestItems && guestItems.length > 0) {
+            for (const gItem of guestItems) {
+              const { data: existingInUser } = await supabase
+                .from("CartItem")
+                .select("id, quantity")
+                .eq("cart", userCart.id)
+                .eq("product", gItem.product)
+                .maybeSingle();
+
+              if (existingInUser) {
+                await supabase
+                  .from("CartItem")
+                  .update({ quantity: Number(existingInUser.quantity) + Number(gItem.quantity) })
+                  .eq("id", existingInUser.id);
+              } else {
+                await supabase
+                  .from("CartItem")
+                  .insert({
+                    cart: userCart.id,
+                    product: gItem.product,
+                    quantity: gItem.quantity,
+                  });
+              }
+            }
+          }
+          // Clean up old guest cart
+          await supabase.from("CartItem").delete().eq("cart", guestCart.id);
+          await supabase.from("Cart").delete().eq("id", guestCart.id);
+        }
+        return userCart as CartRow;
+      }
+
+      // If user does not have an existing cart, but has a guest cart: claim it!
+      if (guestCart) {
+        const { data: claimedCart, error: claimErr } = await supabase
+          .from("Cart")
+          .update({ profile_id: profileId })
+          .eq("id", guestCart.id)
+          .select("*")
+          .single();
+
+        if (!claimErr && claimedCart) {
+          return claimedCart as CartRow;
+        }
+      }
+
+      // If neither exists, create a new cart linked to profile_id
+      const { data: newCart, error: insertError } = await supabase
+        .from("Cart")
+        .insert({
+          profile_id: profileId,
+          device_id: deviceId || null,
+        })
+        .select("*")
+        .single();
+
+      if (insertError) {
+        console.error("Failed to create new user cart:", insertError);
+        return null;
+      }
+
+      return newCart as CartRow;
+    }
+
+    // 2. Guest user (no profileId): find cart by device_id where profile_id is NULL
+    const { data: guestCart, error: guestErr } = await supabase
       .from("Cart")
       .select("*")
       .eq("device_id", deviceId)
-      .is("profile", null)
+      .is("profile_id", null)
       .order("id", { ascending: false })
       .limit(1)
       .maybeSingle();
 
-    if (!error && data) {
-      return data as CartRow;
+    if (!guestErr && guestCart) {
+      return guestCart as CartRow;
     }
 
-    // 2. If not found, create a new cart
-    const { data: newCart, error: insertError } = await supabase
+    // Create a new guest cart
+    const { data: newGuestCart, error: insertError } = await supabase
       .from("Cart")
-      .insert({ device_id: deviceId })
+      .insert({
+        device_id: deviceId,
+        profile_id: null,
+      })
       .select("*")
       .single();
 
     if (insertError) {
-      console.error("Failed to create new cart:", insertError);
+      console.error("Failed to create new guest cart:", insertError);
       return null;
     }
 
-    return newCart as CartRow;
+    return newGuestCart as CartRow;
   } catch (err) {
     console.error("Error in getOrCreateCart:", err);
     return null;
   }
 }
 
-export async function fetchCartWithItems(deviceId: string): Promise<CartData> {
-  if (!deviceId) return EMPTY_CART;
+export async function fetchCartWithItems(
+  deviceId: string,
+  profileId?: string | null
+): Promise<CartData> {
+  if (!deviceId && !profileId) return EMPTY_CART;
 
   try {
-    const cart = await getOrCreateCart(deviceId);
+    const cart = await getOrCreateCart(deviceId, profileId);
     if (!cart) return EMPTY_CART;
 
     const { data, error } = await supabase
@@ -139,14 +249,15 @@ export async function fetchCartWithItems(deviceId: string): Promise<CartData> {
 export async function addItemToCart(
   deviceId: string,
   productId: string,
-  quantity: number = 1
+  quantity: number = 1,
+  profileId?: string | null
 ): Promise<CartData> {
-  if (!deviceId || !productId || quantity <= 0) {
-    return fetchCartWithItems(deviceId);
+  if ((!deviceId && !profileId) || !productId || quantity <= 0) {
+    return fetchCartWithItems(deviceId, profileId);
   }
 
   try {
-    const cart = await getOrCreateCart(deviceId);
+    const cart = await getOrCreateCart(deviceId, profileId);
     if (!cart) return EMPTY_CART;
 
     // Check if the item already exists in this cart
@@ -185,20 +296,21 @@ export async function addItemToCart(
       }
     }
 
-    return await fetchCartWithItems(deviceId);
+    return await fetchCartWithItems(deviceId, profileId);
   } catch (err) {
     console.error("Error in addItemToCart:", err);
-    return fetchCartWithItems(deviceId);
+    return fetchCartWithItems(deviceId, profileId);
   }
 }
 
 export async function updateCartItemQty(
   deviceId: string,
   cartItemId: number,
-  quantity: number
+  quantity: number,
+  profileId?: string | null
 ): Promise<CartData> {
   if (quantity <= 0) {
-    return removeCartItem(deviceId, cartItemId);
+    return removeCartItem(deviceId, cartItemId, profileId);
   }
 
   try {
@@ -211,16 +323,17 @@ export async function updateCartItemQty(
       console.error("Failed to update cart item quantity:", error);
     }
 
-    return await fetchCartWithItems(deviceId);
+    return await fetchCartWithItems(deviceId, profileId);
   } catch (err) {
     console.error("Error in updateCartItemQty:", err);
-    return fetchCartWithItems(deviceId);
+    return fetchCartWithItems(deviceId, profileId);
   }
 }
 
 export async function removeCartItem(
   deviceId: string,
-  cartItemId: number
+  cartItemId: number,
+  profileId?: string | null
 ): Promise<CartData> {
   try {
     const { error } = await supabase
@@ -232,16 +345,19 @@ export async function removeCartItem(
       console.error("Failed to remove cart item:", error);
     }
 
-    return await fetchCartWithItems(deviceId);
+    return await fetchCartWithItems(deviceId, profileId);
   } catch (err) {
     console.error("Error in removeCartItem:", err);
-    return fetchCartWithItems(deviceId);
+    return fetchCartWithItems(deviceId, profileId);
   }
 }
 
-export async function clearCart(deviceId: string): Promise<CartData> {
+export async function clearCart(
+  deviceId: string,
+  profileId?: string | null
+): Promise<CartData> {
   try {
-    const cart = await getOrCreateCart(deviceId);
+    const cart = await getOrCreateCart(deviceId, profileId);
     if (!cart) return EMPTY_CART;
 
     const { error } = await supabase
@@ -253,9 +369,9 @@ export async function clearCart(deviceId: string): Promise<CartData> {
       console.error("Failed to clear cart:", error);
     }
 
-    return await fetchCartWithItems(deviceId);
+    return await fetchCartWithItems(deviceId, profileId);
   } catch (err) {
     console.error("Error in clearCart:", err);
-    return fetchCartWithItems(deviceId);
+    return fetchCartWithItems(deviceId, profileId);
   }
 }
