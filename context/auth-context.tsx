@@ -25,6 +25,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   openAuthModal: (options?: AuthModalOptions) => void;
   closeAuthModal: () => void;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -171,6 +172,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   }, [profile, user]);
 
+  const refreshProfile = useCallback(async () => {
+    if (user?.id) {
+      await fetchProfile(user.id);
+    }
+  }, [user?.id, fetchProfile]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -186,6 +193,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signOut,
         openAuthModal,
         closeAuthModal,
+        refreshProfile,
       }}
     >
       {children}

@@ -50,22 +50,18 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom Disclosures & Payment Methods */}
+        {/* Bottom Disclosures & Navigation */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-mineral text-center md:text-left">
           <p>© 2026 Westernswings. All rights reserved.</p>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="uppercase tracking-wider font-semibold text-[10px] text-neutral-mineral/80 mr-1">
-              Secure Checkout:
-            </span>
-            {paymentMethods.map((method) => (
-              <span
-                key={method}
-                className="bg-surface-card text-espresso-rich font-semibold px-2.5 py-1 rounded border border-border-subtle shadow-2xs text-[11px]"
-              >
-                {method}
-              </span>
-            ))}
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/collections" className="hover:text-espresso-rich transition-colors">
+              Collections
+            </Link>
+            <span className="text-neutral-mineral/40">•</span>
+            <Link href="/orders" className="hover:text-espresso-rich transition-colors">
+              My Orders & Tracking
+            </Link>
           </div>
         </div>
       </div>

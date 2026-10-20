@@ -36,6 +36,8 @@ export async function POST(request: Request) {
       totalAmount?: number | string;
       profileId?: string;
       cartId?: number;
+      saveAddress?: boolean;
+      customerName?: string;
     };
 
     try {
@@ -56,6 +58,8 @@ export async function POST(request: Request) {
       totalAmount,
       profileId,
       cartId,
+      saveAddress,
+      customerName,
     } = body;
 
     // Validate required fields
@@ -116,12 +120,12 @@ export async function POST(request: Request) {
       const { data: paymentRecord, error: paymentError } = await supabase
         .from("Payment")
         .insert({
-          gateway: "razorpay",
+          gateway: "online",
           gateway_payment_id: razorpay_payment_id,
           gateway_order_id: razorpay_order_id,
           gateway_signature: razorpay_signature,
           amount: totalAmount != null ? String(totalAmount) : null,
-          status: "captured",
+          status: "paid",
           raw_response: {
             razorpay_order_id,
             razorpay_payment_id,
@@ -160,6 +164,31 @@ export async function POST(request: Request) {
           console.warn("[Razorpay verify-payment] Could not persist Shipping record:", shippingError);
         } else if (shippingRecord) {
           savedShippingId = shippingRecord.id;
+        }
+      }
+
+      // 2b. If requested, save/update default address in Profile
+      if (customerProfileId && saveAddress && shipping) {
+        const profileUpdates: Record<string, unknown> = {};
+        if (shipping.address_line1) profileUpdates.address_line1 = shipping.address_line1;
+        if (shipping.address_line2 !== undefined) profileUpdates.address_line2 = shipping.address_line2;
+        if (shipping.city) profileUpdates.city = shipping.city;
+        if (shipping.state !== undefined) profileUpdates.state = shipping.state;
+        if (shipping.postal_code) profileUpdates.postal_code = shipping.postal_code;
+        if (shipping.country) profileUpdates.country = shipping.country;
+        if (shipping.contact_phone) {
+          profileUpdates.contact_phone = shipping.contact_phone;
+          profileUpdates.phone = shipping.contact_phone;
+        }
+        if (customerName) profileUpdates.name = customerName;
+
+        const { error: profileError } = await supabase
+          .from("Profile")
+          .update(profileUpdates)
+          .eq("id", customerProfileId);
+
+        if (profileError) {
+          console.warn("[Razorpay verify-payment] Could not update Profile default address:", profileError);
         }
       }
 

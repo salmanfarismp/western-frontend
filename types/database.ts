@@ -131,14 +131,15 @@ export interface CartItemJoined extends CartItemRow {
   Product?: ProductJoined | null;
 }
 
-export type OrderStatus = "new" | "processing" | "completed" | "cancelled" | string;
-export type FulfillmentStatus = "active" | "fulfilled" | "cancelled" | string;
-export type PaymentStatus = "captured" | "completed" | "pending" | "failed" | string;
+export type PaymentMethod = "cod" | "online" | string;
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded" | string;
+export type OrderStatus = "new" | "accepted" | "shipped" | "delivered" | "returned" | string;
+export type FulfillmentStatus = "active" | "cancelled" | "completed" | string;
 
 export interface PaymentRow {
   id: string; // uuid
   created_at: string;
-  gateway: string | null;
+  gateway: PaymentMethod | null;
   gateway_payment_id: string | null;
   gateway_order_id: string | null;
   gateway_signature: string | null;

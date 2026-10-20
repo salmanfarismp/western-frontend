@@ -12,8 +12,13 @@ import {
   AlertCircle,
   Loader2,
   ArrowRight,
+  MapPin,
+  Check,
+  Edit3,
+  Plus,
   ShoppingBag,
 } from "lucide-react";
+import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 import { useCart } from "@/context/cart-context";
 import { loadRazorpayScript, type RazorpayOptions, type RazorpaySuccessResponse, type RazorpayFailedResponse } from "@/lib/razorpay/client";
@@ -25,7 +30,7 @@ interface CheckoutModalProps {
 }
 
 export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: CheckoutModalProps = {}) {
-  const { user, profile } = useAuth();
+  const { user, profile, openAuthModal, refreshProfile } = useAuth();
   const {
     items,
     subtotal,
@@ -49,6 +54,13 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
   const [state, setState] = useState("");
   const [postalCode, setPostalCode] = useState("");
 
+  // Address Selection State
+  const hasSavedAddress = Boolean(
+    profile?.address_line1 && profile?.city && profile?.postal_code
+  );
+  const [deliveryMode, setDeliveryMode] = useState<"saved" | "new">("saved");
+  const [saveAddressAsDefault, setSaveAddressAsDefault] = useState(true);
+
   // UI state
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -58,7 +70,27 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
     dbOrderId?: number | null;
   } | null>(null);
 
-  // Auto-fill from user profile
+  // Enforce auth check if opened without user
+  useEffect(() => {
+    if (isOpen && !user) {
+      onClose();
+      openAuthModal({
+        title: "Sign In to Checkout",
+        description: "Please sign in with Google to complete your purchase and save your delivery details.",
+      });
+    }
+  }, [isOpen, user, onClose, openAuthModal]);
+
+  // Synchronize initial delivery mode when profile loads
+  useEffect(() => {
+    if (hasSavedAddress) {
+      setDeliveryMode("saved");
+    } else {
+      setDeliveryMode("new");
+    }
+  }, [hasSavedAddress]);
+
+  // Auto-fill form values from profile or auth
   useEffect(() => {
     if (profile) {
       if (profile.name) setName(profile.name);
@@ -178,6 +210,8 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
+                saveAddress: deliveryMode === "new" ? saveAddressAsDefault : false,
+                customerName: name.trim(),
                 shipping: {
                   address_line1: addressLine1.trim(),
                   address_line2: addressLine2.trim() || null,
@@ -205,7 +239,14 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
               throw new Error(verifyData.error || "Payment signature verification failed.");
             }
 
-            // 5. Success! Clear cart and update modal view
+            // 5. Success! Clear cart, refresh profile if address saved, and update modal view
+            if (deliveryMode === "new" && saveAddressAsDefault) {
+              try {
+                await refreshProfile();
+              } catch (refreshErr) {
+                console.warn("Could not refresh profile after order:", refreshErr);
+              }
+            }
             await clearCart();
             closeCart(); // close cart sidebar if open
 
@@ -321,13 +362,23 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
                 </div>
               </div>
 
-              <button
-                onClick={onClose}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary-container text-surface-card hover:bg-moss-deep text-xs font-semibold transition-all shadow-sm cursor-pointer"
-              >
-                <span>Continue Browsing</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <Link
+                  href="/orders"
+                  onClick={onClose}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-primary-container text-surface-card hover:bg-moss-deep text-xs font-semibold transition-all shadow-sm cursor-pointer"
+                >
+                  <span>View Your Orders</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-full border border-border-subtle text-xs font-semibold text-espresso-rich hover:bg-surface-cream transition-colors cursor-pointer"
+                >
+                  Continue Browsing
+                </button>
+              </div>
             </div>
           ) : (
             /* CHECKOUT FORM VIEW */
@@ -370,7 +421,7 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
                 </div>
               </div>
 
-              {/* Shipping Address Inputs */}
+              {/* Shipping Address Section */}
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between">
                   <h3 className="font-serif text-sm font-semibold text-espresso-rich flex items-center gap-1.5">
@@ -383,110 +434,199 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-espresso-rich">Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Rahul Sharma"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
-                  </div>
+                {/* If user has a saved address, show selection options */}
+                {hasSavedAddress && (
+                  <div className="space-y-2.5">
+                    {deliveryMode === "saved" ? (
+                      <div className="p-4 rounded-xl border-2 border-primary-container/40 bg-primary-container/[0.03] space-y-2 relative">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="w-4 h-4 rounded-full bg-primary-container text-white flex items-center justify-center text-[10px]">
+                              <Check className="w-3 h-3" />
+                            </span>
+                            <span className="text-xs font-bold text-espresso-rich">
+                              Deliver to Saved Address
+                            </span>
+                            <span className="text-[10px] font-semibold text-primary-container bg-primary-container/10 px-2 py-0.5 rounded-full">
+                              Default
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setDeliveryMode("new");
+                            }}
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary-container hover:underline cursor-pointer"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>Change / Edit</span>
+                          </button>
+                        </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-espresso-rich">Contact Phone *</label>
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="10-digit mobile number"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
+                        <div className="text-xs text-espresso-rich pl-6 space-y-0.5">
+                          <p className="font-semibold">{name || profile?.name}</p>
+                          <p className="text-neutral-mineral">
+                            {profile?.address_line1}
+                            {profile?.address_line2 ? `, ${profile.address_line2}` : ""}
+                          </p>
+                          <p className="text-neutral-mineral">
+                            {profile?.city}, {profile?.state ? `${profile.state} - ` : ""}{profile?.postal_code}
+                          </p>
+                          <p className="text-[11px] text-neutral-mineral pt-0.5">
+                            Phone: {phone || profile?.contact_phone || profile?.phone}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between p-3 rounded-xl bg-surface-cream border border-border-subtle">
+                        <span className="text-xs text-espresso-rich font-medium">
+                          Using alternate delivery address
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (profile) {
+                              if (profile.name) setName(profile.name);
+                              if (profile.phone || profile.contact_phone) setPhone(profile.phone || profile.contact_phone || "");
+                              if (profile.address_line1) setAddressLine1(profile.address_line1);
+                              if (profile.address_line2) setAddressLine2(profile.address_line2);
+                              if (profile.city) setCity(profile.city);
+                              if (profile.state) setState(profile.state);
+                              if (profile.postal_code) setPostalCode(profile.postal_code);
+                            }
+                            setDeliveryMode("saved");
+                          }}
+                          className="text-xs font-semibold text-primary-container hover:underline cursor-pointer"
+                        >
+                          Use saved address instead
+                        </button>
+                      </div>
+                    )}
                   </div>
+                )}
 
-                  <div className="space-y-1 sm:col-span-2">
-                    <label className="text-[11px] font-semibold text-espresso-rich">Email Address</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="For digital invoice and tracking updates"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
-                  </div>
+                {/* Form fields: Shown if deliveryMode === 'new' or if !hasSavedAddress */}
+                {(!hasSavedAddress || deliveryMode === "new") && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-semibold text-espresso-rich">Full Name *</label>
+                      <input
+                        type="text"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. Rahul Sharma"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
 
-                  <div className="space-y-1 sm:col-span-2">
-                    <label className="text-[11px] font-semibold text-espresso-rich">Address Line 1 *</label>
-                    <input
-                      type="text"
-                      required
-                      value={addressLine1}
-                      onChange={(e) => setAddressLine1(e.target.value)}
-                      placeholder="House / Flat / Villa No., Building Name, Street"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
-                  </div>
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-semibold text-espresso-rich">Contact Phone *</label>
+                      <input
+                        type="tel"
+                        required
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="10-digit mobile number"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
 
-                  <div className="space-y-1 sm:col-span-2">
-                    <label className="text-[11px] font-semibold text-espresso-rich">Address Line 2 (Optional)</label>
-                    <input
-                      type="text"
-                      value={addressLine2}
-                      onChange={(e) => setAddressLine2(e.target.value)}
-                      placeholder="Landmark, Area, Estate"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
-                  </div>
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="text-[11px] font-semibold text-espresso-rich">Email Address</label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="For digital invoice and tracking updates"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-espresso-rich">City *</label>
-                    <input
-                      type="text"
-                      required
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      placeholder="e.g. Mumbai, Bengaluru"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
-                  </div>
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="text-[11px] font-semibold text-espresso-rich">Address Line 1 *</label>
+                      <input
+                        type="text"
+                        required
+                        value={addressLine1}
+                        onChange={(e) => setAddressLine1(e.target.value)}
+                        placeholder="House / Flat / Villa No., Building Name, Street"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-espresso-rich">State / Province</label>
-                    <input
-                      type="text"
-                      value={state}
-                      onChange={(e) => setState(e.target.value)}
-                      placeholder="e.g. Maharashtra, Karnataka"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
-                  </div>
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="text-[11px] font-semibold text-espresso-rich">Address Line 2 (Optional)</label>
+                      <input
+                        type="text"
+                        value={addressLine2}
+                        onChange={(e) => setAddressLine2(e.target.value)}
+                        placeholder="Landmark, Area, Estate"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-espresso-rich">Postal Code *</label>
-                    <input
-                      type="text"
-                      required
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
-                      placeholder="6-digit PIN code"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
-                    />
-                  </div>
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-semibold text-espresso-rich">City *</label>
+                      <input
+                        type="text"
+                        required
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder="e.g. Mumbai, Bengaluru"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-espresso-rich">Country</label>
-                    <input
-                      type="text"
-                      disabled
-                      value="India"
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-cream text-neutral-mineral cursor-not-allowed"
-                    />
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-semibold text-espresso-rich">State / Province</label>
+                      <input
+                        type="text"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        placeholder="e.g. Maharashtra, Karnataka"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-semibold text-espresso-rich">Postal Code *</label>
+                      <input
+                        type="text"
+                        required
+                        value={postalCode}
+                        onChange={(e) => setPostalCode(e.target.value)}
+                        placeholder="6-digit PIN code"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-card focus:outline-none focus:ring-1 focus:ring-primary-container"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-semibold text-espresso-rich">Country</label>
+                      <input
+                        type="text"
+                        disabled
+                        value="India"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-border-subtle bg-surface-cream text-neutral-mineral cursor-not-allowed"
+                      />
+                    </div>
+
+                    {/* Checkbox to save address to profile */}
+                    <div className="sm:col-span-2 pt-1">
+                      <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={saveAddressAsDefault}
+                          onChange={(e) => setSaveAddressAsDefault(e.target.checked)}
+                          className="w-4 h-4 rounded text-primary-container focus:ring-primary-container border-border-subtle cursor-pointer accent-primary-container"
+                        />
+                        <span className="text-xs text-espresso-rich font-medium">
+                          Save this address to my profile as default delivery address
+                        </span>
+                      </label>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </form>
           )}
