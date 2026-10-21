@@ -119,7 +119,7 @@ export async function GET() {
       itemsByOrder.get(oid)!.push({
         id: item.id,
         productId: item.product,
-        name: item.product_title_snapshot || product?.name || "Handcrafted Swing",
+        name: item.product_title_snapshot || product?.name || "Swing Chair",
         slug: product?.slug || item.product || "",
         unitPrice: Number(item.unit_price_snapshot) || 0,
         quantity: Number(item.quantity) || 1,

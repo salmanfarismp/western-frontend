@@ -51,12 +51,12 @@ export async function generateMetadata({
     ? `"${searchParam}" Outdoor Swings | Search Results`
     : isFiltered
     ? `${categoryName} | Luxury Outdoor Swings Collection`
-    : "All Outdoor Swings & Patio Daybeds | Handcrafted Collection";
+    : "All Outdoor Swings & Patio Daybeds | Curated Collection";
 
   const description = searchParam
-    ? `Discover handcrafted outdoor porch swings and luxury garden nests matching "${searchParam}" at Westernswings.`
+    ? `Discover outdoor porch swings and luxury garden nests matching "${searchParam}" at Westernswings.`
     : categoryRow?.nick_name ||
-      "Explore our complete range of handcrafted outdoor egg chairs, two-person loveseats, and solid teak porch daybeds engineered for slow, tranquil living.";
+      "Explore our complete range of outdoor egg chairs, two-person loveseats, and solid teak porch daybeds engineered for slow, tranquil living.";
 
   const canonicalUrl = isFiltered
     ? `${siteConfig.url}/collections?category=${encodeURIComponent(categoryParam)}`

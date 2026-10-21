@@ -26,7 +26,7 @@ export function ProductGallery({ gallery, badges }: ProductGalleryProps) {
     validGallery[0] || {
       id: "img-fallback",
       src: FALLBACK_IMAGE_URL,
-      alt: "Westernswings Handcrafted",
+      alt: "Westernswings",
       label: "Primary View",
     };
 

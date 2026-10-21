@@ -13,7 +13,7 @@ export function CollectionsFaqSection({ faqs }: CollectionsFaqSectionProps = {})
       faqs={faqs}
       badge="Porch & Veranda Buying Guide"
       title="Swing Sizing, Mounting & Care Advice"
-      subtitle="Essential specifications to consider before purchasing your handcrafted outdoor swing or suspension stand."
+      subtitle="Essential specifications to consider before purchasing your swing chairs or suspension stand."
     />
   );
 }

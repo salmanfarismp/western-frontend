@@ -108,7 +108,7 @@ export function mapProductJoinedToProduct(
     image: imageUrl,
     alt: imageAlt,
     tones,
-    specs: `${row.name} - Hand-crafted with all-weather resilience and ergonomic support.`,
+    specs: `${row.name} - fine-crafted with all-weather resilience and ergonomic support.`,
     hardware: [
       "Heavy-Duty Dampened Spring",
       "Adjustable Hanging Carabiners & Chains",

@@ -28,6 +28,12 @@ import {
 import { useAuth } from "@/context/auth-context";
 import { useCart } from "@/context/cart-context";
 import { SafeImage } from "@/components/ui/safe-image";
+import {
+  AnnouncementBar,
+  Navbar,
+  Footer,
+  WhatsAppButton,
+} from "@/components/common";
 import type { CustomerOrder } from "@/types/order";
 
 type FilterTab = "all" | "active" | "delivered" | "cancelled";
@@ -252,7 +258,7 @@ export default function CustomerOrdersPage() {
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-container/10 text-primary-container border border-primary-container/20">
             <Package className="w-3.5 h-3.5 text-primary-container" />
-            <span>Handcrafting in Workshop</span>
+            <span>Processing</span>
           </span>
         );
       case "shipped":
@@ -300,7 +306,7 @@ export default function CustomerOrdersPage() {
 
     const stages = [
       { key: "new", label: "Order Placed", step: 1 },
-      { key: "accepted", label: "Handcrafting", step: 2 },
+      { key: "accepted", label: "Processing", step: 2 },
       { key: "shipped", label: "Dispatched", step: 3 },
       { key: "delivered", label: "Delivered", step: 4 },
     ];
@@ -371,87 +377,85 @@ export default function CustomerOrdersPage() {
     );
   };
 
-  /* Loading State */
-  if (isAuthLoading || (isLoadingOrders && user)) {
-    return (
-      <main className="min-h-screen bg-canvas-linen pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto space-y-6">
-          <div className="h-6 w-32 bg-border-subtle/50 rounded-md animate-pulse" />
-          <div className="h-10 w-64 bg-border-subtle/50 rounded-md animate-pulse" />
-          <div className="space-y-4 pt-4">
-            {[1, 2].map((i) => (
-              <div
-                key={i}
-                className="h-64 rounded-2xl bg-surface-card border border-border-subtle p-6 animate-pulse"
-              />
-            ))}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  /* Unauthenticated State: Sign In Gate */
-  if (!user) {
-    return (
-      <main className="min-h-screen bg-canvas-linen pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center space-y-8 bg-surface-card p-8 sm:p-12 rounded-3xl border border-border-subtle shadow-sm animate-fadeIn">
-          <div className="w-16 h-16 rounded-full bg-primary-container/10 text-primary-container flex items-center justify-center mx-auto">
-            <Package className="w-8 h-8" />
-          </div>
-
-          <div className="space-y-3">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-primary-container bg-primary-container/10 px-3 py-1 rounded-full">
-              Customer Portal
-            </span>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-espresso-rich">
-              Track Your Handcrafted Swings
-            </h1>
-            <p className="text-sm text-neutral-mineral max-w-md mx-auto leading-relaxed">
-              Sign in with your Google account to view real-time workshop crafting updates, access digital invoices, and manage your delivery addresses.
-            </p>
-          </div>
-
-          <div className="pt-2">
-            <button
-              onClick={() =>
-                openAuthModal({
-                  title: "Sign In to Westernswings",
-                  description:
-                    "Sign in with Google to view your order history and manage delivery preferences.",
-                  nextUrl: "/orders",
-                })
-              }
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary-container hover:bg-moss-deep text-surface-card text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-md cursor-pointer"
-            >
-              <span>Continue with Google</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="pt-6 border-t border-border-subtle/60 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-neutral-mineral">
-            <div className="flex items-center justify-center gap-1.5">
-              <Truck className="w-4 h-4 text-primary-container" />
-              <span>Insured Delivery</span>
-            </div>
-            <div className="flex items-center justify-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-primary-container" />
-              <span>10-Year Craft Guarantee</span>
-            </div>
-            <div className="flex items-center justify-center gap-1.5">
-              <MessageCircle className="w-4 h-4 text-primary-container" />
-              <span>Concierge Care</span>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  /* Authenticated Customer Orders Dashboard */
+  /* Return unified page layout with Header (AnnouncementBar + Navbar), Main Content, and Footer */
   return (
-    <main className="min-h-screen bg-canvas-linen pt-28 pb-20 px-4 sm:px-6 lg:px-8 animate-fadeIn">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <div className="min-h-screen bg-canvas-linen text-espresso-rich flex flex-col selection:bg-sand-tint selection:text-espresso-rich">
+      {/* Top Announcements */}
+      <AnnouncementBar />
+
+      {/* Main Navigation Header */}
+      <Navbar showSearch={false} />
+
+      {/* Main Content Area */}
+      <main className="flex-1 w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+        {isAuthLoading || (isLoadingOrders && user) ? (
+          /* Loading State */
+          <div className="max-w-5xl mx-auto space-y-6">
+            <div className="h-6 w-32 bg-border-subtle/50 rounded-md animate-pulse" />
+            <div className="h-10 w-64 bg-border-subtle/50 rounded-md animate-pulse" />
+            <div className="space-y-4 pt-4">
+              {[1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="h-64 rounded-2xl bg-surface-card border border-border-subtle p-6 animate-pulse"
+                />
+              ))}
+            </div>
+          </div>
+        ) : !user ? (
+          /* Unauthenticated State: Sign In Gate */
+          <div className="max-w-2xl mx-auto text-center space-y-8 bg-surface-card p-8 sm:p-12 rounded-3xl border border-border-subtle shadow-sm animate-fadeIn">
+            <div className="w-16 h-16 rounded-full bg-primary-container/10 text-primary-container flex items-center justify-center mx-auto">
+              <Package className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-3">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-primary-container bg-primary-container/10 px-3 py-1 rounded-full">
+                Customer Portal
+              </span>
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-espresso-rich">
+                Track Your Swing chairs
+              </h1>
+              <p className="text-sm text-neutral-mineral max-w-md mx-auto leading-relaxed">
+                Sign in with your Google account to view real-time workshop crafting updates, access digital invoices, and manage your delivery addresses.
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <button
+                onClick={() =>
+                  openAuthModal({
+                    title: "Sign In to Westernswings",
+                    description:
+                      "Sign in with Google to view your order history and manage delivery preferences.",
+                    nextUrl: "/orders",
+                  })
+                }
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary-container hover:bg-moss-deep text-surface-card text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-md cursor-pointer"
+              >
+                <span>Continue with Google</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="pt-6 border-t border-border-subtle/60 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-neutral-mineral">
+              <div className="flex items-center justify-center gap-1.5">
+                <Truck className="w-4 h-4 text-primary-container" />
+                <span>Insured Delivery</span>
+              </div>
+              <div className="flex items-center justify-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-primary-container" />
+                <span>10-Year Craft Guarantee</span>
+              </div>
+              <div className="flex items-center justify-center gap-1.5">
+                <MessageCircle className="w-4 h-4 text-primary-container" />
+                <span>Concierge Care</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Authenticated Customer Orders Dashboard */
+          <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-neutral-mineral">
           <Link href="/" className="hover:text-espresso-rich transition-colors">
@@ -600,7 +604,7 @@ export default function CustomerOrdersPage() {
                   ? "No orders match your search query. Try clearing the filter."
                   : activeTab !== "all"
                   ? `You have no ${activeTab} orders at this moment.`
-                  : "You haven't placed any orders yet. Discover our handcrafted outdoor swings."}
+                  : "You haven't placed any orders yet. Discover our curated collection of outdoor swings."}
               </p>
             </div>
             <div className="pt-2">
@@ -817,7 +821,15 @@ export default function CustomerOrdersPage() {
             })}
           </div>
         )}
-      </div>
+          </div>
+        )}
+      </main>
+
+      {/* Unified Footer */}
+      <Footer />
+
+      {/* Floating Concierge Action */}
+      <WhatsAppButton />
 
       {/* MODAL 1: ORDER CANCELLATION DIALOG */}
       {cancellingOrder && (
@@ -953,7 +965,7 @@ export default function CustomerOrdersPage() {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-mineral">
                   Delivered To
                 </span>
-                <p className="font-semibold">{profile?.name || user.user_metadata?.full_name || "Customer"}</p>
+                <p className="font-semibold">{profile?.name || user?.user_metadata?.full_name || "Customer"}</p>
                 {receiptOrder.shipping && (
                   <p className="text-neutral-mineral">
                     {receiptOrder.shipping.addressLine1}
@@ -1166,6 +1178,6 @@ export default function CustomerOrdersPage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

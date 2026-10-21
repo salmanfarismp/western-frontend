@@ -68,6 +68,8 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
     orderId: string;
     paymentId: string;
     dbOrderId?: number | null;
+    totalPaid: number;
+    deliveryTo: string;
   } | null>(null);
 
   // Enforce auth check if opened without user
@@ -116,6 +118,7 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
     } else {
       document.body.style.overflow = "";
       setErrorMessage(null);
+      setSuccessData(null);
     }
     return () => {
       document.body.style.overflow = "";
@@ -239,7 +242,10 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
               throw new Error(verifyData.error || "Payment signature verification failed.");
             }
 
-            // 5. Success! Clear cart, refresh profile if address saved, and update modal view
+            // 5. Success! Snapshot receipt values before clearing cart
+            const paidAmount = subtotal;
+            const deliverySnapshot = `${name.trim()}, ${city.trim()} (${postalCode.trim()})`;
+
             if (deliveryMode === "new" && saveAddressAsDefault) {
               try {
                 await refreshProfile();
@@ -254,6 +260,8 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
               orderId: response.razorpay_order_id,
               paymentId: response.razorpay_payment_id,
               dbOrderId: verifyData.db_order_id,
+              totalPaid: paidAmount,
+              deliveryTo: deliverySnapshot,
             });
           } catch (verifyErr: unknown) {
             const err = verifyErr as Error;
@@ -353,12 +361,12 @@ export function CheckoutModal({ isOpen: propIsOpen, onClose: propOnClose }: Chec
                 <div className="flex justify-between py-1 border-b border-border-subtle/60">
                   <span className="text-neutral-mineral">Delivery To</span>
                   <span className="font-medium text-right line-clamp-1 max-w-[220px]">
-                    {name}, {city} ({postalCode})
+                    {successData.deliveryTo}
                   </span>
                 </div>
                 <div className="flex justify-between py-1 font-semibold text-primary-container">
                   <span>Total Paid</span>
-                  <span>₹{subtotal.toLocaleString("en-IN")}</span>
+                  <span>₹{successData.totalPaid.toLocaleString("en-IN")}</span>
                 </div>
               </div>
 

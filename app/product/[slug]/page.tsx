@@ -28,11 +28,11 @@ export async function generateMetadata({
   if (!product) {
     return {
       title: "Product Not Found | Westernswings",
-      description: "The requested handcrafted swing chair could not be found.",
+      description: "The requested swing chair could not be found.",
     };
   }
 
-  const title = `${product.name} | Handcrafted Luxury Outdoor Swing`;
+  const title = `${product.name} | Luxury Outdoor Swing chairs`;
   const description =
     product.description ||
     product.subtitle ||
@@ -57,7 +57,7 @@ export async function generateMetadata({
           url: primaryImage,
           width: 1200,
           height: 630,
-          alt: `${product.name} Handcrafted Luxury Swing`,
+          alt: `${product.name} Swing Chair`,
         },
       ],
       locale: "en_IN",

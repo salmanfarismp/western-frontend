@@ -252,7 +252,7 @@ export function Navbar({
                   {isSearching && searchResults.length === 0 ? (
                     <div className="p-6 text-center text-xs text-neutral-mineral flex items-center justify-center gap-2">
                       <Loader2 className="w-4 h-4 text-primary-container animate-spin" />
-                      <span>Searching handcrafted swings...</span>
+                      <span>Searching...</span>
                     </div>
                   ) : searchResults.length > 0 ? (
                     <div className="space-y-1.5">
